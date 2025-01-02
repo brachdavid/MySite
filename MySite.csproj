@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Sections\" />
     <Folder Include="wwwroot\images\brand\" />
     <Folder Include="wwwroot\images\icons\" />
     <Folder Include="wwwroot\images\content\" />
