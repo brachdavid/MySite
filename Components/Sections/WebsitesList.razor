@@ -1,0 +1,108 @@
+﻿<section id="nabidka" aria-label="Jaké weby tvořím" class="pb-5">
+    <div class="container col-lg-8 col-xl-12 col-xxl-10">
+        <div class="text-center">
+            <h2 class="fs-1 text-uppercase fw-bold">Co všechno <span class="text-primary">tvořím?</span></h2>
+            <p class="fs-5 text-body-secondary">Každý projekt je jiný, ale všechny si zaslouží stejnou péči – jednoduché i ty složitější.</p>
+        </div>
+        <div class="row g-0 align-items-end justify-content-center">
+            <div class="col-md-4 col-lg-4 col-xl-2 col-xxl-2 d-none d-md-block">
+                <img src="/images/brand/accordion.webp" class="img-fluid " />
+            </div>
+            <!-- Accordion -->
+            <div class="col-md-8 col-lg-8 col-xl-8 col-xxl-8 custom-card h-100">
+                <div class="accordion pt-4 px-4" id="WebsiteExamplesAccordion">
+                    @for (int i = 0; i < ProjectTypes.Count; i++)
+                    {
+                        var pt = ProjectTypes[i];
+                        var headingId = $"heading-{i}";
+                        var collapseId = $"collapse-{i}";
+
+                        <div class="accordion-item shadow mb-3 rounded-3">
+                            <h2 class="accordion-header" id="@headingId">
+                                <button class="accordion-button collapsed shadow-none" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#@collapseId"
+                                        aria-expanded="false" aria-controls="@collapseId">
+                                    <i class="@pt.IconClass me-2"></i> <span class="fs-4">@pt.Title</span>
+                                </button>
+                            </h2>
+                            <div id="@collapseId" class="accordion-collapse collapse"
+                                 aria-labelledby="@headingId"
+                                 data-bs-parent="#WebsiteExamplesAccordion">
+                                <div class="accordion-body">
+                                    <p class="lead fw-bold">@pt.ShortDescription</p>
+                                    <p>@pt.DetailedDescription</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<ProjectType> ProjectTypes = new()
+    {
+        new ProjectType
+        {
+            Title = "Webové vizitky",
+            ShortDescription = "Jednoduché prezentační stránky",
+            DetailedDescription = "Řešení vhodné pro freelancery, malé firmy či osobní prezentace. " +
+                                  "Jednostránkové webovky obvykle charakterizuje přehledná struktura, jednoduchá správa a srozumitelná komunikace.",
+            IconClass = "bi bi-person-badge"
+        },
+        new ProjectType
+        {
+            Title = "Firemní weby",
+            ShortDescription = "Komplexní stránky pro menší a střední firmy.",
+            DetailedDescription = "Zpravidla obsahují více podstránek (O nás, Služby, Reference, Kontakt, Ceník, Možnosti spolupráce, atd.). " +
+                                  "Důraz se klade na reprezentativní design, funkčnost, rychlost, kvalitu obsahu i SEO.",
+            IconClass = "bi bi-building"
+        },
+        new ProjectType
+        {
+            Title = "Blogy / Online magazíny",
+            ShortDescription = "Platformy pro články, novinky, recepty, recenze apod.",
+            DetailedDescription = "Ústředním motivem těchto webovek jsou obsahové články. " +
+                                  "Soustředíme se proto na čtivý design, přehlednou navigaci a vyladěné SEO. " +
+                                  "Složitější projekty se neobejdou bez redakčního systému (CMS), např. WordPress.",
+            IconClass = "bi bi-journal-text"
+        },
+        new ProjectType
+        {
+            Title = "Portfolia / Fotogalerie",
+            ShortDescription = "Ideální pro fotografy, umělce a kreativce.",
+            DetailedDescription = "Portfolio stránky umožňují profesionální prezentaci vaší tvorby. " +
+                                  "Kladu důraz na estetický vzhled, rychlé načítání obrázků a snadnou správu obsahu.",
+            IconClass = "bi bi-images"
+        },
+        new ProjectType
+        {
+            Title = "Landing pages",
+            ShortDescription = "Jednostránkové reklamní kampaně.",
+            DetailedDescription = "Hodí se pro marketingové akce či sběr kontaktů. " +
+                                  "Vyniká úderným designem, jasným CTA a odlehčenou strukturou, aby návštěvníci rychle vykonali požadovanou akci.",
+            IconClass = "bi bi-megaphone"
+        },
+        new ProjectType
+        {
+            Title = "One-page scrolly sites",
+            ShortDescription = "Vše podstatné na jedné dlouhé stránce.",
+            DetailedDescription = "Moderní trend pro malé projekty či eventy, kde se všechny důležité informace zobrazují plynulým scrollingem. " +
+                                  "Důležitá je zde plynulá navigace a responzivita.",
+            IconClass = "bi bi-layout-text-sidebar"
+        },
+        new ProjectType
+        {
+            Title = "Webové aplikace na míru",
+            ShortDescription = "Interní webové nástroje pro firmy.",
+            DetailedDescription = "Aplikace sloužící firmám ke zjednodušení úkolů a zvýšení efektivity. " +
+                                  "Nabízím pokročilé funkce s vlastním backendem (C#/.NET, Blazor) a databázemi. " +
+                                  "Dle potřeby lze integrovat další služby a role-based přihlášení.",
+            IconClass = "bi bi-laptop"
+        }
+    };
+
+}
