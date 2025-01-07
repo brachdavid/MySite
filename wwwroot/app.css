@@ -3,3 +3,14 @@ main {
     font-weight: 400;
     font-style: normal;
 }
+/* app.css */
+
+.navbar-nav .nav-link {
+    cursor: pointer;
+}
+
+/* Pro hladké scrollování */
+html {
+    scroll-padding-top: 100px;
+    scroll-behavior: smooth;
+}

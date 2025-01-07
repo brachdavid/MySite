@@ -1,10 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<header>
-    <NavMenu />
+<header class="sticky-top">
+    <NavMenu @rendermode="InteractiveServer" />
 </header>
 
-<main>
+<main data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="0" tabindex="0">
     @Body
 </main>
 
