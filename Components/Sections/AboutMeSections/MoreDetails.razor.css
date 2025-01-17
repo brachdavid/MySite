@@ -1,0 +1,32 @@
+﻿/* Tooltip text - výchozí nastavení (skrytý) */
+.tooltip-text {
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+}
+
+/* Při najetí myší na obrázek zobraz tooltip */
+.technology-image:hover + .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Styl obrázků */
+.technology-image {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.technology-image:hover {
+    transform: scale(1.1);
+}

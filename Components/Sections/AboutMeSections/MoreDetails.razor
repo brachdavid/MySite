@@ -1,0 +1,123 @@
+﻿@rendermode InteractiveServer
+<section id="moreDetails" class="justify-content-center">
+    <div class="container col-md-10 col-lg-12 col-xl-10 text-center text-lg-start">
+        <p class="lead">
+            Když jsem se v patnácti rozhodoval, co dál dělat, kodéřina pro mě byla jasná volba...
+        </p>
+        <p class="lead">
+            Claim <span class="fst-italic">(ispirovaný starou televizní reklamou na Jihlavanku, kdyby mladší ročníky náhodou tápaly)</span> je to sice chytlavý, ale bohužel zcela nepravdivý.
+            <span class="text-primary fw-bold">Žádná cesta většinou nevede přímo.</span> Klikatí se, stoupá a klesá, občas člověka zavede do slepé uličky, jindy mu zase před obličej vykreslí křižovatku a zapomene do batohu přibalit navigaci.
+            Ani já zpočátku neměl tušení, jakým směrem vykročit, takže jsem pro jistotu otestoval všechny. A každá další zkušenost mě postupně formovala do současné podoby.
+        </p>
+        <p class="lead">
+            Absolvoval jsem Střední zemědělskou školu v Klatovech, konkrétně obor <span class="fw-bold text-primary">Ekonomika a podnikání</span>.
+            Protože jsem vždycky dával přednost svobodě a rutinní zaměstnání mě naopak upřímně děsilo, dlouhé roky jsem naplno vykonával samostatně výdělečnou činnost.
+            Začínal jsem jako stavební dělník, což mě do života vybavilo praktickými dovednostmi.
+            Posléze mě živilo psaní obsahových a reklamních článků na zakázku.
+        </p>
+        <div class="clearfix">
+            <!-- ePřehledně - Google Analytics -->
+            <img src="images/content/eprehledne.webp" alt="ePřehledně" class="img-fluid rounded border shadow-lg float-md-end col-md-5 col-lg-6 col-xl-5 col-xxl-4 mx-md-3 mb-md-2 mb-3 mt-md-2" loading="lazy" style="cursor: pointer;" @onclick="(() => OpenModal())" />
+            <!-- Modální okno -->
+            @if (IsModalOpen)
+            {
+                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.8);" @onclick="CloseModal">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" @onclick:stopPropagation>
+                        <div class="modal-content bg-transparent border-0 position-relative">
+                            <!-- Zavírací tlačítko -->
+                            <button type="button" class="btn-close custom-close position-absolute top-0 end-0 m-3" aria-label="Close" @onclick="CloseModal"></button>
+
+                            <!-- Obrázek -->
+                            <img src="images/content/eprehledne.webp" class="img-fluid rounded" alt="ePřehledně" loading="lazy" />
+                        </div>
+                    </div>
+                </div>
+            }
+            <p class="lead">
+                Přispívání do cizích magazínů mě nakonec inspirovalo k založení vlastního projektu - <span class="fw-bold text-primary">ePřehledně.cz</span>.
+                Stránky běžící ve Wordpressu, které jsem postupně dokázal protlačit na platformy <span class="fw-bold text-primary">Seznam Newsfeed a Google Zprávy</span>, byly svého času mojí srdeční záležitostí.
+                Protože jsem veškeré činnosti spojené s běžným fungováním obstarával svépomocí, nasbíral jsem cenné zkušenosti v několika různých oblastech.
+            </p>
+            <p class="lead">
+                Vytváření obsahu, hledání tématických, volně licencovaných fotografií, vymýšlení a ladění designu, občasné kódování, monetizace reklamních ploch, optimalizace pro vyhledávače, 
+                hledání nových způsobů, jak webovky zviditelnit - to všechno bylo mou náplní práce a zároveň koníčkem.
+                <span class="text-primary fw-bold">Dva roky fungování, téměř sedm milionů návštěv..</span> Myslím, že na samouka to nebyly vůbec špatné výsledky.
+                Člověk ale nemá dlouho přešlapovat na místě, takže nyní už dělá projekt radost někomu jinému.
+            </p>
+        </div>
+        <p class="lead">
+            Životopis jsem následně rozšířil o další zastávku - práci <span class="text-primary fw-bold">kontrolora kvality v kovovýrobě</span>, 
+            což mi vštípilo „soft skills“ jako preciznost, zodpovědnost a schopnost pracovat s technickými detaily. 
+            Vždycky mě ovšem přitahovala hlavně technologie a kreativita, což se zákonitě promítalo do mých zájmů a vizí.
+            Chyběl jenom správný impuls.
+        </p>
+        <p class="lead">
+            Skutečné profesní "osvícení" přišlo s rekvalifikačním kurzem <span class="text-primary fw-bold">Programátor www aplikací C#.NET</span>.
+            Během několikaměsíčního vzdělávacího maratonu (a navazujícího samostudia) mi došlo, že programování je vlastně tak trochu jako stavění domů 
+            – každý řádek kódu představuje cihlu, které dohromady tvoří pevnou a funkční budovu. 
+            Abyste mohli nemovitost bez sebemenších pochybností užívat, musíte mít jistotu, že řemeslníci odvedli dobrou práci, použili kvalitní materiály a drželi se správných technických postupů.
+            Přesně takové služby chci svým klientům nabízet.
+        </p>
+        <p class="lead">
+            V současné době pomáhám firmám a jednotlivcům <span class="text-primary fw-bold">vytvářet moderní webové aplikace šité na míru</span>. Snažím se přitom zúročit všechny znalosti a dovednosti, které jsem dosud nasbíral.
+            Využívám přitom oblíbené technologie, nástroje a frameworky, nejčastěji:
+        </p>
+        <div class="row justify-content-evenly align-items-center pt-2">
+            @foreach (var tech in Technologies)
+            {
+                <div class="col-lg-1 col-md-2 col-3 text-center mb-4 position-relative">
+                    <img src="@tech.ImageUrl" alt="@tech.Name"
+                         class="img-fluid rounded technology-image" />
+                    <div class="tooltip-text">@tech.Name</div>
+                </div>
+            }
+        </div>
+        <p class="lead">
+            Závěrem bych rád doplnil, že ačkoliv se programování věnuji jako freelancer, rozhodně se nebráním ani zajímavým, ať už <span class="text-primary fw-bold">full time nebo part time</span>, pracovním nabídkám. 
+            Potřebujete vytvořit nové či upravit stávající webovky? Sháníte člověka, který bude plnit vaše stránky obsahem? Hledáte snaživého <span class="text-primary fw-bold">junior programátora</span> do vaší firmy?
+            Budu moc rád, když se mi ozvete - třeba prostřednictvím <a href="/kontakt" class="text-decoration-none fw-bold">konktaktního formuláře</a>.
+        </p>
+    </div>
+</section>
+
+@code {
+    private bool IsModalOpen { get; set; } = false;
+
+    // Otevře modální okno
+    private void OpenModal()
+    {
+        IsModalOpen = true;
+    }
+
+    // Zavře modální okno
+    private void CloseModal()
+    {
+        IsModalOpen = false;
+    }
+
+    // Zavření při kliknutí mimo obrázek
+    private void HandleModalBackgroundClick()
+    {
+        CloseModal();
+    }
+
+    private List<Technology> Technologies { get; set; } = new()
+    {
+        new Technology { Name = "C#", ImageUrl = "images/icons/cSharp.webp" },
+        new Technology { Name = "HTML5", ImageUrl = "images/icons/html.webp" },
+        new Technology { Name = "CSS3", ImageUrl = "images/icons/css.webp" },
+        new Technology { Name = "Bootstrap", ImageUrl = "images/icons/bootstrap.webp" },
+        new Technology { Name = "JavaScript", ImageUrl = "images/icons/javaScript.webp" },
+        new Technology { Name = "Visual Studio Code", ImageUrl = "images/icons/visualStudioCode.webp" },
+        new Technology { Name = "Visual Studio", ImageUrl = "images/icons/visualStudio.webp" },
+        new Technology { Name = "SQL", ImageUrl = "images/icons/sql.webp" },
+        new Technology { Name = "Wordpress", ImageUrl = "images/icons/wordpress.webp" },
+        new Technology { Name = "Blazor", ImageUrl = "images/icons/blazor.webp" },
+        new Technology { Name = "Tailwind", ImageUrl = "images/icons/tailwind.webp" },
+        new Technology { Name = "GitHub", ImageUrl = "images/icons/gitHub.webp" }
+    };
+    
+}
+
+
+

@@ -17,6 +17,9 @@
         /// Detailní popis webové aplikace
         /// </summary>
         public required string DetailedDescription { get; set; }
+        /// <summary>
+        /// Bootstrap Icons
+        /// </summary>
         public required string IconClass { get; set; }
     }
 }

@@ -1,0 +1,39 @@
+﻿#coding {
+    position: relative;
+    background-color: black;
+    height: 80vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#coding .container {
+    position: relative;
+    z-index: 2;
+}
+
+@media (min-width: 768px) {
+    #coding {
+        height: 50vh; /* Výška 80 % obrazovky na tabletech a větších zařízeních */
+    }
+}
+
+@media (min-width: 1200px) {
+    #coding {
+        height: 40vh; /* Výška 50 % obrazovky na velkých obrazovkách */
+    }
+}

@@ -1,40 +1,33 @@
-﻿@inject IJSRuntime JSRuntime
-@inject NavigationManager Navigation
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
-<nav id="navbar" class="navbar navbar-expand-lg py-3 fixed-top fw-bold position-absolute bg-black fs-5" data-bs-theme="dark" >
+<nav id="navbar" class="navbar navbar-expand-lg py-3 fixed-top position-absolute bg-black fs-5" data-bs-theme="dark">
     <div class="container-fluid col-xl-11 col-xxl-10">
-        <!-- Brand nalevo -->
-        <a class="navbar-brand " href="/" @onclick="ForceRefresh">MOJE APLIKACE</a>
+        <a class="navbar-brand" href="/" @onclick="NavigateAndCloseMenu" Match="NavLinkMatch.All">MOJE APLIKACE</a>
 
-        <!-- Toggler button pro mobilní zařízení -->
         <button class="navbar-toggler" type="button" @onclick="ToggleMenu" aria-controls="navbarNav" aria-expanded="@IsMenuOpen" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navigační položky -->
         <div class="collapse navbar-collapse @(IsMenuOpen ? "show" : "")" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-lg-2">
-                <!-- Přidáno ms-auto pro zarovnání doprava -->
                 <li class="nav-item">
-                    <a class="nav-link" href="#uvod" @onclick="NavigateAndCloseMenu">Úvod</a>
+                    <NavLink class="nav-link" href="/" @onclick="NavigateAndCloseMenu" Match="NavLinkMatch.All">Úvod</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink href="/o-mne" class="nav-link">O mně</NavLink>
+                    <NavLink class="nav-link" href="/o-mne" @onclick="NavigateAndCloseMenu">O mně</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink href="#nabidka" class="nav-link">Nabídka</NavLink>
+                    <NavLink class="nav-link" href="/prubeh-spoluprace" @onclick="NavigateAndCloseMenu">Průběh spolupráce</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink href="/prubeh-spoluprace" class="nav-link">Průběh spolupráce</NavLink>
+                    <NavLink class="nav-link" href="/reference" @onclick="NavigateAndCloseMenu">Reference</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink href="/reference" class="nav-link">Reference</NavLink>
+                    <NavLink class="nav-link" href="/blog" @onclick="NavigateAndCloseMenu">Blog</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink href="/blog" class="nav-link">Blog</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink href="/kontakt" class="btn btn-primary rounded-pill fs-5 py-1 px-4 fw-bold" role="button">Kontakt</NavLink>
+                    <NavLink class="btn btn-primary rounded-pill fs-5 py-1 px-4" href="/kontakt" @onclick="NavigateAndCloseMenu">Kontakt</NavLink>
                 </li>
             </ul>
         </div>
@@ -42,11 +35,12 @@
 </nav>
 
 @code {
+    private bool IsMenuOpen = false;
+
     private void ForceRefresh()
     {
-        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
-    private bool IsMenuOpen = false;
 
     private void ToggleMenu()
     {
@@ -55,13 +49,8 @@
 
     private void NavigateAndCloseMenu()
     {
+        ForceRefresh();
+        // Zavře menu na mobilních zařízeních a nastaví scrollovací pozici
         IsMenuOpen = false;
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("initializeScrollSpy");
-        }
     }
 }
