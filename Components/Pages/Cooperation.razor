@@ -1,0 +1,49 @@
+﻿@page "/prubeh-spoluprace"
+
+<section id="cooperation" style="padding-top: 100px;" class="pb-4">
+    <div class="container text-center col-md-10 col-lg-12 col-xl-10 justify-content-center">
+        <h2 class="fs-1 text-uppercase fw-bold px-2">Průběh <span class="text-primary">spolupráce</span></h2>
+        <p class="lead mb-5">
+            Přemýšlíte, jak bude naše spolupráce vypadat? Proces je navržen tak, aby byl co nejjednodušší a zároveň efektivní. Zakládám si na <span class="fw-bold text-primary">transparentní komunikaci a důkladné přípravě</span>, abych zajistil, že výsledek bude přesně odpovídat vašim představám.
+        </p>
+        <div class="container col-xl-10">
+        <div class="row">
+            <div class="col-lg-5 col-xxl-6 mb-4 mb-lg-0">
+                <!-- Sticky container for the image -->
+                <div class="sticky-container mb-4">
+                    <img src="images/brand/cooperation.webp" alt="David Břach" class="img-fluid rounded shadow-lg" />
+                </div>
+            </div>
+                <div class="col-lg-7 col-xxl-6">
+                    @foreach (var step in CooperationSteps)
+                    {
+                        <div class="flip-card mb-4" style="--card-index: @(CooperationSteps.IndexOf(step) + 1)">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front bg-outline-secondary p-4 d-flex align-items-center justify-content-center">
+                                    <h3 class="fw-bold text-secondary m-0">@step.Order. @step.StepName</h3>
+                                </div>
+                                <div class="flip-card-back px-sm-5 bg-outline-secondary d-flex align-items-center justify-content-center">
+                                    <p class="m-0 lead">@step.StepDescription</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    // Data model pro kroky spolupráce
+    private List<CooperationStep> CooperationSteps { get; set; } = new()
+    {
+        new CooperationStep { Order = 1, StepName = "Prvotní kontakt", StepDescription = "Každá spolupráce začíná úvodním kontaktem. Můžete mě oslovit telefonicky, e-mailem, přes WhatsApp, Messenger, LinkedIn, kontaktní formulář nebo rezervační systém."},
+        new CooperationStep { Order = 2, StepName = "Analýza vašeho záměru", StepDescription = "Abych dokázal vytvořit personalizované stránky, musím důkladně navnímat klientovy představy. Pokusím se zároveň vystihnout charakter podnikání, správnou atmosféru a cílovou skupinu."},
+        new CooperationStep { Order = 3, StepName = "Návrh řešení a konzultace", StepDescription = "Jakmile získám všechny podstatné informace, sestavím základní koncept webovek. Klient dostane příležitost vznést námitky, což výrazně uspíší následnou realizaci projektu."},
+        new CooperationStep { Order = 4, StepName = "Realizace projektu", StepDescription = "Schválený koncept vzápětí začínám realizovat. Neexistuje žádný univerzální výpočet časové náročnosti, přibližný odhad poskytuji z kapacitních důvodů zcela individuálně."},
+        new CooperationStep { Order = 5, StepName = "Úpravy, testování a ladění", StepDescription = "Hotové stránky podrobím vícestupňové kontrole a důkladnému testování. Klient dostane příležitost zhodnotit výsledný produkt a navrhnout poslední úpravy před nasazením."},
+        new CooperationStep { Order = 6, StepName = "Předání a spuštění projektu", StepDescription = "Postarám se o hladké spuštění webu, zajistím správnou konfiguraci, předám klientovi všechny přístupové údaje a vysvětlím mu základní ovládání stránek."},
+        new CooperationStep { Order = 7, StepName = "Následná poporodní péče", StepDescription = "Pozor, umístěním webových stránek na internet to nekončí! Nabízím dlouhodobou podporu – aktualizace, správu obsahu a drobné úpravy dle klientových potřeb."},
+    };
+}

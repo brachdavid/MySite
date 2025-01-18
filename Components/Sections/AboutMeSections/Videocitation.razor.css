@@ -34,6 +34,6 @@ video {
 
 @media (min-width: 1200px) {
     #coding {
-        height: 40vh; /* Výška 50 % obrazovky na velkých obrazovkách */
+        height: 50vh; /* Výška 50 % obrazovky na velkých obrazovkách */
     }
 }

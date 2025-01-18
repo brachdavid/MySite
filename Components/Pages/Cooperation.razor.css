@@ -1,0 +1,142 @@
+﻿/* Sticky obrázek */
+.sticky-container {
+    position: sticky;
+    top: 90px; /* Zůstane viditelný s malým offsetem */
+}
+
+/* Kartičky */
+.flip-card {
+    width: 100%;
+    height: 200px; /* Výška kartičky */
+    perspective: 1000px; /* Perspektivní pohled */
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg); /* Otočení kartičky */
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Skrytí zadní strany při otočení */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.flip-card-front {
+    border: 2px solid #6c757d; /* Border barva */
+    background-color: white; /* Přední strana bílá */
+    color: #6c757d; /* Text barva */
+    overflow: hidden;
+}
+
+.flip-card-back {
+    border: 2px solid #6c757d; /* Border barva */
+    background-color: white; /* Šedá pro zadní stranu */
+    transform: rotateY(180deg); /* Zadní strana rotovaná */
+}
+.flip-card-front::before,
+.flip-card-front::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%; /* Geometrické kruhy */
+    opacity: 0.4;
+    z-index: 1; /* Pod obsahem textu na přední straně */
+    animation: float 5s infinite alternate ease-in-out; /* Animace kruhů */
+}
+
+.flip-card-front::before {
+    content: "";
+    position: absolute;
+    border-radius: 50%; /* Geometrické kruhy */
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #007bff, #6f42c1); /* Modro-fialový gradient */
+    opacity: 0.4;
+    z-index: 1; /* Pod obsahem textu na přední straně */
+    top: -20px; /* Výchozí pozice */
+    left: -20px; /* Výchozí pozice */
+    animation: chaotic-float-before 8s infinite alternate ease-in-out; /* Animace pro ::before */
+    animation-delay: calc(var(--card-index) * 0.5s); /* Dynamické zpoždění na základě indexu */
+}
+
+.flip-card-front::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%; /* Geometrické kruhy */
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #17a2b8, #28a745); /* Tyrkysovo-zelený gradient */
+    opacity: 0.4;
+    z-index: 1; /* Pod obsahem textu na přední straně */
+    bottom: -40px; /* Výchozí pozice */
+    right: -40px; /* Výchozí pozice */
+    animation: chaotic-float-after 8s infinite alternate ease-in-out; /* Animace pro ::after */
+    animation-delay: calc(var(--card-index) * 0.7s); /* Další dynamické zpoždění */
+}
+
+/* Definice animací */
+@keyframes chaotic-float-before {
+    0% {
+        transform: translate(0, 0); /* Výchozí pozice */
+    }
+
+    25% {
+        transform: translate(20px, -20px); /* Posun doprava a nahoru */
+    }
+
+    50% {
+        transform: translate(-10px, 30px); /* Posun doleva a dolů */
+    }
+
+    75% {
+        transform: translate(15px, 15px); /* Posun doprava */
+    }
+
+    100% {
+        transform: translate(0, 0); /* Návrat na výchozí pozici */
+    }
+}
+
+@keyframes chaotic-float-after {
+    0% {
+        transform: translate(0, 0); /* Výchozí pozice */
+    }
+
+    25% {
+        transform: translate(-30px, 10px); /* Posun doleva a nahoru */
+    }
+
+    50% {
+        transform: translate(20px, -25px); /* Posun doprava a dolů */
+    }
+
+    75% {
+        transform: translate(-15px, -15px); /* Posun doleva */
+    }
+
+    100% {
+        transform: translate(0, 0); /* Návrat na výchozí pozici */
+    }
+}
+
+@media (max-width: 500px) {
+    .flip-card {
+        height: 300px;
+    }
+
+    .flip-card-front, .flip-card-back {
+        padding: 0.75rem; /* Snížený padding */
+    }
+}
