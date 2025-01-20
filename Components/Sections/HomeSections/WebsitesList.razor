@@ -11,9 +11,9 @@
             <!-- Accordion -->
             <div class="col-md-8 col-lg-8 col-xl-8 col-xxl-8 custom-card h-100">
                 <div class="accordion pt-4 px-4" id="WebsiteExamplesAccordion">
-                    @for (int i = 0; i < ProjectTypes.Count; i++)
+                    @for (int i = 0; i < ApplicationTypes.Count; i++)
                     {
-                        var pt = ProjectTypes[i];
+                        var pt = ApplicationTypes[i];
                         var headingId = $"heading-{i}";
                         var collapseId = $"collapse-{i}";
 
@@ -43,9 +43,9 @@
 </section>
 
 @code {
-    private List<ProjectType> ProjectTypes = new()
+    private List<ApplicationType> ApplicationTypes = new()
     {
-        new ProjectType
+        new ApplicationType
         {
             Title = "Webové vizitky",
             ShortDescription = "Jednoduché prezentační stránky",
@@ -53,7 +53,7 @@
                                   "Jednostránkové webovky obvykle charakterizuje přehledná struktura, jednoduchá správa a srozumitelná komunikace.",
             IconClass = "bi bi-person-badge"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "Firemní weby",
             ShortDescription = "Komplexní stránky pro menší a střední firmy.",
@@ -61,7 +61,7 @@
                                   "Důraz se klade na reprezentativní design, funkčnost, rychlost, kvalitu obsahu i SEO.",
             IconClass = "bi bi-building"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "Blogy / Online magazíny",
             ShortDescription = "Platformy pro články, novinky, recepty, recenze apod.",
@@ -70,7 +70,7 @@
                                   "Složitější projekty se neobejdou bez redakčního systému (CMS), např. WordPress.",
             IconClass = "bi bi-journal-text"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "Portfolia / Fotogalerie",
             ShortDescription = "Ideální pro fotografy, umělce a kreativce.",
@@ -78,7 +78,7 @@
                                   "Kladu důraz na estetický vzhled, rychlé načítání obrázků a snadnou správu obsahu.",
             IconClass = "bi bi-images"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "Landing pages",
             ShortDescription = "Jednostránkové reklamní kampaně.",
@@ -86,7 +86,7 @@
                                   "Vyniká úderným designem, jasným CTA a odlehčenou strukturou, aby návštěvníci rychle vykonali požadovanou akci.",
             IconClass = "bi bi-megaphone"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "One-page scrolly sites",
             ShortDescription = "Vše podstatné na jedné dlouhé stránce.",
@@ -94,7 +94,7 @@
                                   "Důležitá je zde plynulá navigace a responzivita.",
             IconClass = "bi bi-layout-text-sidebar"
         },
-        new ProjectType
+        new ApplicationType
         {
             Title = "Webové aplikace na míru",
             ShortDescription = "Interní webové nástroje pro firmy.",

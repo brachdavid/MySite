@@ -1,0 +1,113 @@
+﻿@page "/reference"
+
+<section id="reference" style="padding-top: 100px;" class="pb-4">
+    <div class="container text-center col-md-10 col-lg-12 col-xl-10 justify-content-center">
+        <h2 class="fs-1 text-uppercase fw-bold px-2 text-center text-primary">Reference</h2>
+        <p class="lead text-body-secondary pb-4">
+            Za každým dokončeným projektem se ukrývá vášeň, odhodlání, radost a hlavně spousta hodin tvrdé práce.
+            Každá <span class="fw-bold text-primary">personalizovaná komerční zakázka i nekomerční aplikace</span>, na které jsem doposud pracoval, mi pomohla rozšířit programátorské obzory.
+            Chcete se o těchto projektech dozvědět něco konkrétního? Nahlédněte do mého virtuálního šuplíku.
+        </p>
+
+        @if (CommercialProjects.Any())
+        {
+            <div class="container card p-4 p-md-5 shadow-lg text-center mb-4">
+                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3"><span class="text-primary">Komerční</span> projekty</h3>
+                @for (int i = 0; i < CommercialProjects.Count; i++)
+                {
+                    var project = CommercialProjects[i];
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-lg-6 @(i % 2 == 0 ? "order-lg-1" : "order-lg-2")">
+                            <a href="@project.Link"><img src="@project.ImagePath" class="img-fluid" loading="lazy" /></a>
+                        </div>
+                        <div class="col-lg-6 pt-3 pt-lg-0 @(i % 2 == 0 ? "order-lg-2" : "order-lg-1")">
+                            <a href="@project.Link"><h4 class="fs-4 fw-bold btn btn-primary rounded-pill px-5">@project.Name</h4></a>
+                            <p class="lead">@project.Description</p>
+                            <p class="lead fst-italic fw-bold"><span class="text-primary">Technologie:</span> @project.Technologies</p>
+                        </div>
+                    </div>
+                    @if (i < CommercialProjects.Count - 1)
+                    {
+                        <hr class="pb-4" />
+                    }
+                }
+            </div>
+        }
+
+        @if (NonCommercialProjects.Any())
+        {
+            <div class="container card p-4 p-md-5 shadow-lg text-center">
+                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3"><span class="text-primary">Nekomerční</span> projekty</h3>
+                @for (int i = 0; i < NonCommercialProjects.Count; i++)
+                {
+                    var project = NonCommercialProjects[i];
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-lg-6 @(i % 2 == 0 ? "order-lg-1" : "order-lg-2")">
+                            <a href="@project.Link"><img src="@project.ImagePath" class="img-fluid" loading="lazy" /></a>
+                        </div>
+                        <div class="col-lg-6 pt-3 pt-lg-0 @(i % 2 == 0 ? "order-lg-2" : "order-lg-1")">
+                            <a href="@project.Link"><h4 class="fs-4 fw-bold btn btn-primary rounded-pill px-5">@project.Name</h4></a>
+                            <p class="lead">@project.Description</p>
+                            <p class="lead fst-italic fw-bold"><span class="text-primary">Technologie:</span> @project.Technologies</p>
+                        </div>
+                    </div>
+                    @if (i < NonCommercialProjects.Count - 1)
+                    {
+                        <hr class="pb-4" />
+                    }
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<Project> CommercialProjects { get; set; } = new()
+    {
+        new Project
+        {
+            Name = "Sádrokartony Trmota",
+            Link = "http://sadrokartonytrmota.cz/",
+            Description = "Moje první komerční zakázka - webová stránka pro lokálního řemeslníka. Klient požadoval rychlost, jednoduchost přehlednost a dobrou optimalizaci pro vyhledávače.",
+            Technologies = "Blazor, C#, Bootstrap, HTML, CSS",
+            ImagePath = "/images/content/sadrokartonyTrmota.webp"
+        },
+        new Project
+        {
+            Name = "Osobní portfolio",
+            Link = "http://davidbrach.cz/",
+            Description = "Moderní webová prezentace sloužící jako digitální vizitka. Představuje mé projekty, dovednosti a zkušenosti s důrazem na čistý design a responzivitu.",
+            Technologies = "Blazor, C#, Bootstrap, HTML, CSS",
+            ImagePath = "/images/content/docasna.webp"
+        }
+    };
+
+    private List<Project> NonCommercialProjects { get; set; } = new()
+    {
+        new Project
+        {
+            Name = "Family Budget",
+            Link = "https://github.com/brachdavid/FamilyBudget",
+            Description = "Konzolová aplikace zaměřená na správu rodinného rozpočtu. Nabízí intuitivní rozhraní pro sledování příjmů a výdajů, analýzu dat a základní statistiky.",
+            Technologies = "C#, OOP, LINQ, Validace",
+            ImagePath = "/images/content/familyBudget.webp"
+        }
+        ,
+        new Project
+        {
+            Name = "Jobseekers",
+            Link = "https://github.com/brachdavid/Jobseekers",
+            Description = "Konzolová aplikace pro evidenci uchazečů o zaměstnání. Naučila mě pracovat s databázemi pomocí Entity Framework Core a SQL Serveru.",
+            Technologies = "C#, OOP, Entity Framework Core, SQL Server",
+            ImagePath = "/images/content/jobseekers.webp"
+        },
+        new Project
+        {
+            Name = "Task Manager",
+            Link = "https://github.com/brachdavid/TaskManager",
+            Description = "Robustní webová aplikace umožňující správu úkolů, klientů a zaměstnanců. Postaveno s využitím Blazoru a napojením na databázi SQL Server.",
+            Technologies = "C#, Blazor, Entity Framework Core, SQL Server, Identity ASP.NET Core, HTML, CSS, Bootstrap",
+            ImagePath = "/images/content/taskManager.webp"
+        }
+    };
+}

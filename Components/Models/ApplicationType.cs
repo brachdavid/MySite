@@ -3,7 +3,7 @@
     /// <summary>
     /// Třída reprezentující druh webové aplikace
     /// </summary>
-    public class ProjectType
+    public class ApplicationType
     {
         /// <summary>
         /// Název webové aplikace
