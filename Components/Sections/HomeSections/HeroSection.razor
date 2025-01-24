@@ -1,4 +1,6 @@
-﻿<section id="heroSection" aria-label="Úvodní sekce" class="pb-5">
+﻿@inject NavigationManager NavigationManager
+
+<section id="heroSection" aria-label="Úvodní sekce" class="pb-5">
     <!-- Background image -->
     <img Src="images/brand/heroSection.webp" class="object-fit-cover position-absolute w-100 h-100" alt="David Břach" style="object-position: right top;" />
     <!-- Carousel -->
@@ -10,28 +12,35 @@
             <div class="carousel-item active p-3 p-md-5 p-lg-2">
                 <h1 class="display-4 text-uppercase fw-bold">Tvorba <span class='text-primary'>webových</span> stránek</h1>
                 <p class="lead">Vytvořím <span class='text-primary'>rychlé, přehledné a moderní</span> webové stránky, které přivedou nové zákazníky a posilí důvěru těch stávajících.</p>
-                <NavLink href="#portfolio" class="btn btn-primary btn-lg rounded-pill" role="button">Moje portfolio</NavLink>
+                <NavLink href="/prubeh-spoluprace" class="btn btn-primary btn-lg rounded-pill" role="button" @onclick="Refresh">Průběh spolupráce</NavLink>
             </div>
             <div class="carousel-item p-3 p-md-5 p-lg-2">
                 <h1 class="display-4 text-uppercase fw-bold">Vylepšení a <span class='text-primary'>modernizace</span> webu</h1>
                 <p class="lead">Máte pocit, že vaše současná prezentace zaspala dobu? Provedu <span class='text-primary'>drobný facelift nebo kompletní rekonstrukci</span>.</p>
-                <NavLink href="#prubehSpoluprace" class="btn btn-primary btn-lg rounded-pill" role="button">Průběh spolupráce</NavLink>
+                <NavLink href="/reference" class="btn btn-primary btn-lg rounded-pill" role="button" @onclick="Refresh">Reference</NavLink>
             </div>
             <div class="carousel-item p-3 p-md-5 p-lg-2">
                 <h1 class="display-4 text-uppercase fw-bold">Správa a <span class='text-primary'>údržba</span> webu</h1>
                 <p class="lead">Nabízím <span class='text-primary'>pravidelné konzultace, aktualizace či drobné modifikace</span>. Dohlédnu na bezpečnost, rychlost i spolehlivost webu v čase.</p>
-                <NavLink href="#technologie" class="btn btn-primary btn-lg rounded-pill" role="button">Moje „nářadí“</NavLink>
+                <NavLink href="/o-mne" class="btn btn-primary btn-lg rounded-pill" role="button" @onclick="Refresh">Něco o mně</NavLink>
             </div>
             <div class="carousel-item p-3 p-md-5 p-lg-2">
                 <h1 class="display-4 text-uppercase fw-bold">Tvorba <span class='text-primary'>obsahu</span></h1>
                 <p class="lead">Zabývám se také <span class='text-primary'>psaním obsahových článků na zakázku</span>. Zpracovávám především sportovní, ekonomická a lifestylová témata.</p>
-                <NavLink href="/blog" class="btn btn-primary btn-lg rounded-pill" role="button">Moje články</NavLink>
+                <NavLink href="/blog" class="btn btn-primary btn-lg rounded-pill" role="button" @onclick="Refresh">Moje články</NavLink>
             </div>
             <div class="carousel-item p-3 p-md-5 p-lg-2">
                 <h1 class="display-4 text-uppercase fw-bold">Otevřen <span class='text-primary'>pracovním</span> nabídkám</h1>
                 <p class="lead">Hledám stabilní zaměstnání, kde mohu uplatnit <span class='text-primary'>znalosti (nejenom) programovacího jazyka C#</span> a nastartovat kariéru v IT.</p>
-                <NavLink href="/kontaktniFormular" class="btn btn-primary btn-lg rounded-pill" role="button">Kontaktní formulář</NavLink>
+                <NavLink href="/kontakt" class="btn btn-primary btn-lg rounded-pill" role="button" @onclick="Refresh">Kontaktní formulář</NavLink>
             </div>
         </div>
     </div>
 </section>
+
+@code {
+    private void Refresh()
+    {
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}

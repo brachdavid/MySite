@@ -4,8 +4,11 @@
     <NavMenu @rendermode="InteractiveServer" />
 </header>
 
-<main data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="0" tabindex="0">
-    @Body
-</main>
+<div class="d-flex flex-column min-vh-100">
+    <!-- Hlavní obsah stránky -->
+    <main class="flex-grow-1">
+        @Body
+    </main>
 
-<Footer />
+    <Footer @rendermode="InteractiveServer" />
+</div>

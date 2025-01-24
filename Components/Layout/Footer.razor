@@ -1,1 +1,42 @@
-﻿
+﻿@inject NavigationManager NavigationManager
+
+<footer class="footer py-4 bg-black text-light text-center" aria-label="Patička s informacemi o provozovateli">
+    <div class="container col-xl-11 col-xxl-10">
+        <p class="text-center fw-bold">
+            &copy; @DateTime.Now.Year <a href="/" class="text-decoration-none text-light" @onclick="Refresh">MOJE APLIKACE</a> | Všechna práva vyhrazena.
+            <br />
+            <a href="/zasady-ochrany-osobnich-udaju" class="text-decoration-none" @onclick="Refresh">
+                Zásady ochrany osobních údajů
+            </a>
+        </p>
+        <hr />
+        <div>
+            <h5 class="fw-bold text-uppercase">Provozovatel</h5>
+            <p>
+                David Břach
+                <br />
+                IČO: 04866452
+                <br />
+                Sadová 121, 340 12 Měčín
+            </p>
+            <p>
+                <a href="https://www.linkedin.com/in/davidbrach/" class="text-light me-3" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profil">
+                    <i class="bi bi-linkedin fs-4"></i>
+                </a>
+                <a href="https://www.facebook.com/david.brach.3/" class="text-light me-3" target="_blank" rel="noopener noreferrer" aria-label="Facebook profil">
+                    <i class="bi bi-facebook fs-4"></i>
+                </a>
+                <a href="https://github.com/brachdavid/" class="text-light me-3" target="_blank" rel="noopener noreferrer" aria-label="GitHub profil">
+                    <i class="bi bi-github fs-4e"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+@code {
+    private void Refresh()
+    {
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}
