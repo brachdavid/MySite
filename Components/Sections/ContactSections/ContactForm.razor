@@ -1,0 +1,168 @@
+﻿@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+<section id="contactForm" class="card rounded-4 shadow-lg h-100 p-4 px-lg-2 px-xl-4">
+    <EditForm Enhance Model="EmailRequest" FormName="EmailForm" OnSubmit="ProcessForm">
+        <div class="container">
+            <h3 class="fs-3 text-uppercase fw-bold px-2 text-center"><span class="text-primary">Kontaktní</span> formulář</h3>
+            <hr />
+
+            <!-- Úspěšná zpráva -->
+            @if (IsEmailSent)
+            {
+                <div class="alert alert-success" role="alert">
+                    Vaše zpráva byla úspěšně odeslána, brzy se vám ozvu.
+                    Nechcete čekat? Zkuste mi rovnou zavolat na telefonní číslo <strong>+420 606 283 358</strong>.
+                </div>
+            }
+            <div class="row lead text-uppercase">
+                <div class="mb-3 col-lg-6">
+                    <label for="name" class="form-label m-0 fw-bold">Jméno</label>
+                    <InputText id="name" @bind-Value="EmailRequest.Name" autocomplete="on" class="form-control mt-2" placeholder="Jméno" required />
+                </div>
+
+                <div class="mb-3 col-lg-6">
+                    <label for="email" class="form-label m-0 fw-bold">E-mail</label>
+                    <InputText id="email" @bind-Value="EmailRequest.Email" autocomplete="on" class="form-control mt-2" placeholder="E-mail" required type="email" />
+                </div>
+
+                <div class="mb-3 col-lg-6">
+                    <label for="phoneNumber" class="form-label m-0 fw-bold">Telefonní číslo</label>
+                    <InputText id="phoneNumber" @bind-Value="EmailRequest.PhoneNumber" autocomplete="on" class="form-control mt-2" placeholder="Telefonní číslo"
+                               pattern="^\+?[0-9]{9,15}$" title="Zadejte platné telefonní číslo (9-15 číslic, volitelně s +)" required />
+                </div>
+
+                <div class="mb-3 col-lg-6">
+                    <label for="queryType" class="form-label m-0 fw-bold">Typ dotazu</label>
+                    <InputSelect id="queryType" @bind-Value="EmailRequest.QueryType" class="form-select mt-2">
+                        @foreach (var queryType in Enum.GetValues<QueryType>())
+                        {
+                            <option value="@queryType">@GetDisplayName(queryType)</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label m-0 fw-bold">Zpráva</label>
+                    <InputTextArea id="message" @bind-Value="EmailRequest.Message" autocomplete="on" class="form-control mt-2" placeholder="Zpráva" required />
+                </div>
+            </div>
+
+            <div>
+                <p class="small">Vyplněním a odesláním tohoto formuláře souhlasíte se <a href="/zasady-ochrany-osobnich-udaju" class="text-decoration-none">zpracováním vašich osobních údajů</a>. Tyto informace nebudou použity k marketingovým účelům ani nebudou zpřístupněny třetím stranám.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-1"><span class="lead text-uppercase fw-bold">Odeslat</span></button>
+        </div>
+
+    </EditForm>
+</section>
+
+@code {
+    private bool IsEmailSent { get; set; } = false;
+
+    [SupplyParameterFromForm(FormName = "EmailForm")]
+    EmailRequest EmailRequest { get; set; } = new();
+
+    private async Task ProcessForm()
+    {
+        await SendEmailAsync();
+        ResetForm();
+        IsEmailSent = true;
+    }
+
+    private async Task SendEmailAsync()
+    {
+        var email = new MimeMessage();
+        email.From.Add(MailboxAddress.Parse("brasik20@seznam.cz"));
+        email.To.Add(MailboxAddress.Parse("brasik20@seznam.cz"));
+        email.Subject = $"{EmailRequest.Name} vám poslal zprávu!";
+        email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            background-color: #f5f5f5;
+                            margin: 0;
+                            padding: 0;
+                        }}
+                        .email-container {{
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background-color: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            overflow: hidden;
+                        }}
+                        .email-header {{
+                            background-color: #f9d697;
+                            padding: 20px;
+                            text-align: center;
+                            font-size: 24px;
+                            color: #333;
+                        }}
+                        .email-content {{
+                            padding: 20px;
+                            color: #555;
+                            line-height: 1.6;
+                        }}
+                        .email-content p {{
+                            margin: 10px 0;
+                        }}
+                        .email-content strong {{
+                            color: #000;
+                        }}
+                        .email-footer {{
+                            background-color: #f5f5f5;
+                            padding: 10px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #888;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='email-header'>
+                            Nová zpráva od {EmailRequest.Name}
+                        </div>
+                        <div class='email-content'>
+                            <p><strong>Jméno:</strong> {EmailRequest.Name}</p>
+                            <p><strong>E-mail:</strong> {EmailRequest.Email}</p>
+                            <p><strong>Telefon:</strong> {EmailRequest.PhoneNumber}</p>
+                            <p><strong>Typ dotazu:</strong> {GetDisplayName(EmailRequest.QueryType)}</p>
+                            <p><strong>Zpráva:</strong></p>
+                            <p>{EmailRequest.Message}</p>
+                        </div>
+                        <div class='email-footer'>
+                            Tuto zprávu jste obdrželi automaticky. Neodpovídejte na ni prosím.
+                        </div>
+                    </div>
+                </body>
+                </html>"
+            };
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync("smtp.seznam.cz", 587, MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync("brasik20@seznam.cz", "9411302098Brach");
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+
+    private void ResetForm()
+    {
+        EmailRequest = new EmailRequest();
+    }
+
+    public static string GetDisplayName(Enum enumValue)
+    {
+        return enumValue.GetType()
+            .GetField(enumValue.ToString())
+            ?.GetCustomAttribute<DisplayAttribute>()?.Name
+            ?? enumValue.ToString();
+    }
+}

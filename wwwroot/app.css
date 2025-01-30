@@ -8,9 +8,3 @@ main {
 .navbar-nav .nav-link {
     cursor: pointer;
 }
-
-/* Pro hladké scrollování */
-html {
-    scroll-padding-top: 100px;
-    scroll-behavior: smooth;
-}

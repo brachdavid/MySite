@@ -1,19 +1,17 @@
 ﻿/* Zaoblení všech položek akordeonu */
 .accordion-item {
-    border-radius: 0.75rem; /* Zaoblení rohů */
     overflow: hidden; /* Zajistí, že obsah nepřetéká přes zaoblené rohy */
     border: none; /* Volitelné: odstranění rámečku mezi položkami */
 }
 
 /* Zaoblení tlačítek akordeonu */
 .accordion-button {
-    border-radius: 0.75rem; /* Zaoblené rohy tlačítka ve sbaleném stavu */
     border: none; /* Odstranění okrajů tlačítka */
 }
 
     /* Zaoblení pouze horních rohů, když je tlačítko rozbalené */
     .accordion-button:not(.collapsed) {
-        border-radius: 0.75rem 0.75rem 0 0; /* Zaoblení pouze horních rohů */
+        border-radius: 1rem 1rem 0 0; /* Zaoblení pouze horních rohů */
         box-shadow: none; /* Odstranění modrého zvýraznění */
         border: none; /* Odstranění rámečku */
     }
@@ -27,9 +25,9 @@
         display: block; /* Povinné, pokud chcete skrývat na menších obrazovkách */
         background-color: #6c757d;
         border-radius: 0;
-        border-top-left-radius: 0.375rem; /* Hodnota Bootstrap rounded-top */
-        border-top-right-radius: 0.375rem;
-        border-bottom-right-radius: 0.375rem;
+        border-top-left-radius: 1rem; /* Hodnota Bootstrap rounded-top */
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
     }
 
     /* Třída .card (volitelně) */
