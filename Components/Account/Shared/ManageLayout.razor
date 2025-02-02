@@ -1,17 +1,16 @@
 ﻿@inherits LayoutComponentBase
 @layout AccountLayout
 
-<h1>Manage your account</h1>
+<PageTitle>Administrace - David Břach</PageTitle>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
+<section id="login" aria-label="Administrace webu" style="padding-top: 100px;" class="pb-5">
+    <div class="container col-md-8 col-lg-6 justify-content-center text-center">
+        <h1 class="fs-1 text-uppercase fw-bold px-2">Administrace <span class="text-primary">webu</span></h1>
+        <div class="card rounded-5 shadow-lg p-2 mb-3 bg-dark">
             <ManageNavMenu />
         </div>
-        <div class="col-md-9">
+        <div class="card rounded-5 shadow-lg p-4 p-md-5">
             @Body
         </div>
     </div>
-</div>
+</section>

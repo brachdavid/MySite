@@ -1,4 +1,4 @@
-﻿namespace MySite.Components.Models
+﻿namespace MySite.Models
 {
     public class CooperationStep
     {

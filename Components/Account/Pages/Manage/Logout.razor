@@ -1,0 +1,22 @@
+﻿@page "/odhlaseni"
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ILogger<Logout> Logger
+
+<PageTitle>Odhlášení - David Břach</PageTitle>
+
+<section id="logout" aria-label="Odhlášení" class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card rounded-5 shadow-lg p-4 p-md-5 text-center">
+        <h1 class="fs-1 text-uppercase fw-bold text-primary">Odhlášení</h1>
+        <p>Probíhá odhlášení, prosím čekejte...</p>
+    </div>
+</section>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+        Logger.LogInformation("Uživatel byl odhlášen.");
+        NavigationManager.NavigateTo("/", forceLoad: true); // Po odhlášení přesměruj na hlavní stránku
+    }
+}

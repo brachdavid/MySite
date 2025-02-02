@@ -1,5 +1,6 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using Microsoft.AspNetCore.Identity.UI.Services
 @inject IConfiguration Configuration
+@inject IEmailSender EmailSender
 
 <section id="contactForm" class="card rounded-4 shadow-lg h-100 p-4 px-lg-2 px-xl-4">
     <EditForm Enhance Model="EmailRequest" FormName="EmailForm" OnSubmit="ProcessForm">
@@ -73,13 +74,16 @@
 
     private async Task SendEmailAsync()
     {
-        var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse("brasik20@seznam.cz"));
-        email.To.Add(MailboxAddress.Parse("brasik20@seznam.cz"));
-        email.Subject = $"{EmailRequest.Name} vám poslal zprávu!";
-        email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-            {
-                Text = $@"
+        var subject = $"{EmailRequest.Name} vám poslal zprávu!";
+        var body = BuildEmailBody();
+        // Předpokládáme, že chcete odeslat zprávu na stejnou adresu jako odesílatele,
+        // případně upravte podle svých potřeb.
+        await EmailSender.SendEmailAsync("brasik20@seznam.cz", subject, body);
+    }
+
+    private string BuildEmailBody()
+    {
+        return $@"
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -143,14 +147,7 @@
                         </div>
                     </div>
                 </body>
-                </html>"
-            };
-
-        using var smtp = new SmtpClient();
-        await smtp.ConnectAsync("smtp.seznam.cz", 587, MailKit.Security.SecureSocketOptions.StartTls);
-        await smtp.AuthenticateAsync("brasik20@seznam.cz", "9411302098Brach");
-        await smtp.SendAsync(email);
-        await smtp.DisconnectAsync(true);
+                </html>";
     }
 
     private void ResetForm()
@@ -162,7 +159,7 @@
     {
         return enumValue.GetType()
             .GetField(enumValue.ToString())
-            ?.GetCustomAttribute<DisplayAttribute>()?.Name
+            ?.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.Name
             ?? enumValue.ToString();
     }
 }

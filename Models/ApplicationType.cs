@@ -1,4 +1,4 @@
-﻿namespace MySite.Components.Models
+﻿namespace MySite.Models
 {
     /// <summary>
     /// Třída reprezentující druh webové aplikace

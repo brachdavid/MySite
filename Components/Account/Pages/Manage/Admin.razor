@@ -1,0 +1,95 @@
+﻿@page "/admin"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
+@using MySite.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Administrace - David Břach</PageTitle>
+
+<h2 class="fs-2 text-uppercase fw-bold px-2">Profil <span class="text-primary">uživatele</span></h2>
+<StatusMessage Message="@message" />
+<EditForm Model="Input" FormName="change-password" OnValidSubmit="OnValidSubmitAsync" method="post">
+    <DataAnnotationsValidator />
+    <div class="form-floating mb-3">
+        <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
+        <label for="username" class="form-label">Uživatelské jméno</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText type="password" @bind-Value="Input.OldPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your old password." />
+        <label for="old-password" class="form-label">Staré heslo</label>
+        <ValidationMessage For="() => Input.OldPassword" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText type="password" @bind-Value="Input.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please enter your new password." />
+        <label for="new-password" class="form-label">Nové heslo</label>
+        <ValidationMessage For="() => Input.NewPassword" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please confirm your new password." />
+        <label for="confirm-password" class="form-label">Potvrzení nového hesla</label>
+        <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary rounded-pill fs-5 py-1 px-4">Změnit heslo</button>
+    <NavLink href="/odhlaseni" class="btn btn-lg btn-danger rounded-pill fs-5 py-1 px-4">Odhlásit se</NavLink>
+</EditForm>
+
+
+
+@code {
+    private ApplicationUser user = default!;
+    private string? username;
+    private string? message;
+    private bool hasPassword;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        username = await UserManager.GetUserNameAsync(user);
+        hasPassword = await UserManager.HasPasswordAsync(user);
+    }
+    private async Task OnValidSubmitAsync()
+    {
+        var changePasswordResult = await UserManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+        if (!changePasswordResult.Succeeded)
+        {
+            message = $"Error: {string.Join(",", changePasswordResult.Errors.Select(error => error.Description))}";
+            return;
+        }
+
+        await SignInManager.RefreshSignInAsync(user);
+
+        // Uložení zprávy do cookie pro StatusMessage komponentu
+        HttpContext.Response.Cookies.Append(IdentityRedirectManager.StatusCookieName, "Heslo bylo úspěšně změněno.");
+
+        // Přesměrování zpět na administraci
+        NavigationManager.NavigateTo("/admin", forceLoad: true);
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current password")]
+        public string OldPassword { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "Heslo musí obsahovat minimálně {2} a maximálně {1} znaků.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Hesla se neshodují.")]
+        public string ConfirmPassword { get; set; } = "";
+    }
+}
