@@ -1,6 +1,10 @@
 ﻿@page "/reference"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject ApplicationDbContext DbContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
 
-<PageTitle>Reference - David Břach</PageTitle>
+<PageTitle>Reference | David Břach</PageTitle>
 
 <section id="reference" style="padding-top: 100px;" class="pb-4">
     <div class="container text-center col-md-10 col-lg-12 col-xl-10 justify-content-center">
@@ -13,112 +17,198 @@
 
         @if (CommercialProjects.Any())
         {
-            <div class="container card rounded-4 p-4 p-md-5 shadow-lg text-center mb-4">
-                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3"><span class="text-primary">Komerční</span> projekty</h3>
-                @for (int i = 0; i < CommercialProjects.Count; i++)
-                {
-                    var project = CommercialProjects[i];
-                    <div class="row mb-4 align-items-center">
-                        <div class="col-lg-6 @(i % 2 == 0 ? "order-lg-1" : "order-lg-2")">
-                            <a href="@project.Link"><img src="@project.ImagePath" class="img-fluid preview-image" loading="lazy" /></a>
-                        </div>
-                        <div class="col-lg-6 pt-3 pt-lg-0 @(i % 2 == 0 ? "order-lg-2" : "order-lg-1")">
-                            <a href="@project.Link"><h4 class="fs-4 fw-bold btn btn-primary rounded-pill px-3">@project.Name</h4></a>
-                            <p class="lead">@project.Description</p>
-                            <p class="lead fst-italic fw-bold"><span class="text-primary">Technologie:</span> @project.Technologies</p>
-                        </div>
-                    </div>
-                    @if (i < CommercialProjects.Count - 1)
+            <div class="container card rounded-5 p-4 p-md-5 shadow-lg text-center mb-4">
+                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3">
+                    <span class="text-primary">Komerční</span> projekty
+                </h3>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    @foreach (var project in CommercialProjects)
                     {
-                        <hr class="pb-4" />
+                        <div class="col d-flex">
+                            <div class="h-100 w-100">
+                                <a href="@project.Link">
+                                    <img src="@project.ImagePath" class="card-img-top img-fluid preview-image" loading="lazy" />
+                                </a>
+                                <div class="card-body">
+                                    @if (EditingProject?.Id == project.Id)
+                                    {
+                                        <EditForm Model="EditingProject" OnValidSubmit="SaveChanges">
+                                            <DataAnnotationsValidator />
+
+                                            <input class="form-control mb-2" @bind="EditingProject.Name" placeholder="Název projektu" />
+                                            <input class="form-control mb-2" @bind="EditingProject.Link" placeholder="Odkaz na projekt" />
+                                            <textarea class="form-control mb-2" @bind="EditingProject.Description" placeholder="Popis projektu"></textarea>
+                                            <input class="form-control mb-2" @bind="EditingProject.Technologies" placeholder="Technologie" />
+                                            <input class="form-control mb-2" @bind="EditingProject.ImagePath" placeholder="Odkaz na obrázek" />
+
+                                            <button type="submit" class="btn btn-success btn-sm">💾 Uložit</button>
+                                            <button type="button" class="btn btn-secondary btn-sm ms-2" @onclick="CancelEdit">❌ Zrušit</button>
+                                        </EditForm>
+                                    }
+                                    else
+                                    {
+                                        <a href="@project.Link" class="text-decoration-none">
+                                            <h4 class="fs-4 fw-bold text-primary">@project.Name</h4>
+                                        </a>
+                                        <p class="text-body-secondary fst-italic">
+                                            <span class="fw-bold">Technologie:</span> @project.Technologies
+                                        </p>
+
+                                        @if (IsAuthenticated)
+                                        {
+                                            <button class="btn btn-sm rounded-pill btn-warning me-2" @onclick="() => StartEdit(project)">✏️ Upravit</button>
+                                            <button class="btn btn-sm rounded-pill btn-danger" @onclick="() => DeleteProject(project.Id)">🗑 Smazat</button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     }
-                }
+                </div>
             </div>
         }
 
+        <!-- Nekomerční projekty -->
         @if (NonCommercialProjects.Any())
         {
             <div class="container card rounded-4 p-4 p-md-5 shadow-lg text-center">
-                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3"><span class="text-primary">Nekomerční</span> projekty</h3>
-                @for (int i = 0; i < NonCommercialProjects.Count; i++)
-                {
-                    var project = NonCommercialProjects[i];
-                    <div class="row mb-4 align-items-center">
-                        <div class="col-lg-6 @(i % 2 == 0 ? "order-lg-1" : "order-lg-2")">
-                            <a href="@project.Link"><img src="@project.ImagePath" class="img-fluid preview-image" loading="lazy" /></a>
-                        </div>
-                        <div class="col-lg-6 pt-3 pt-lg-0 @(i % 2 == 0 ? "order-lg-2" : "order-lg-1")">
-                            <a href="@project.Link"><h4 class="fs-4 fw-bold btn btn-primary rounded-pill px-3">@project.Name</h4></a>
-                            <p class="lead">@project.Description</p>
-                            <p class="lead fst-italic fw-bold"><span class="text-primary">Technologie:</span> @project.Technologies</p>
-                        </div>
-                    </div>
-                    @if (i < NonCommercialProjects.Count - 1)
+                <h3 class="fs-2 text-uppercase fw-bold px-2 pb-3">
+                    <span class="text-primary">Nekomerční</span> projekty
+                </h3>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach (var project in NonCommercialProjects)
                     {
-                        <hr class="pb-4" />
+                        <div class="col d-flex">
+                            <div class="card h-100 w-100 shadow-sm">
+                                <a href="@project.Link">
+                                    <img src="@project.ImagePath" class="card-img-top img-fluid preview-image" loading="lazy" />
+                                </a>
+                                <div class="card-body d-flex flex-column">
+                                    @if (EditingProject?.Id == project.Id)
+                                    {
+                                        <EditForm Model="EditingProject" OnValidSubmit="SaveChanges">
+                                            <DataAnnotationsValidator />
+                                            <input class="form-control mb-2" @bind="EditingProject.Name" placeholder="Název projektu" />
+                                            <input class="form-control mb-2" @bind="EditingProject.Link" placeholder="Odkaz na projekt" />
+                                            <textarea class="form-control mb-2" @bind="EditingProject.Description" placeholder="Popis projektu"></textarea>
+                                            <input class="form-control mb-2" @bind="EditingProject.Technologies" placeholder="Technologie" />
+                                            <input class="form-control mb-2" @bind="EditingProject.ImagePath" placeholder="Odkaz na obrázek" />
+                                            <button type="submit" class="btn btn-success btn-sm">💾 Uložit</button>
+                                            <button type="button" class="btn btn-secondary btn-sm ms-2" @onclick="CancelEdit">❌ Zrušit</button>
+                                        </EditForm>
+                                    }
+                                    else
+                                    {
+                                        <a href="@project.Link" class="text-decoration-none">
+                                            <h4 class="fs-4 fw-bold text-primary">@project.Name</h4>
+                                        </a>
+                                        <p class="flex-grow-1">@project.Description</p>
+                                        <p class="text-body-secondary fst-italic">
+                                            <span class="fw-bold">Technologie:</span> @project.Technologies
+                                        </p>
+                                        @if (IsAuthenticated)
+                                        {
+                                            <button class="btn btn-sm rounded-pill btn-warning mb-2" @onclick="() => StartEdit(project)">✏️ Upravit</button>
+                                            <button class="btn btn-sm rounded-pill btn-danger" @onclick="() => DeleteProject(project.Id)">🗑 Smazat</button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     }
-                }
+                </div>
             </div>
         }
     </div>
 </section>
+
 <style>
     .preview-image {
         cursor: pointer;
         transition: transform 0.2s ease;
     }
-    .preview-image:hover {
-        transform: scale(1.05);
-    }
+
+        .preview-image:hover {
+            transform: scale(1.05);
+        }
 </style>
 
 @code {
-    private List<Project> CommercialProjects { get; set; } = new()
-    {
-        new Project
-        {
-            Name = "Sádrokartony Trmota",
-            Link = "http://sadrokartonytrmota.cz/",
-            Description = "Moje první komerční zakázka - webová stránka pro lokálního řemeslníka. Klient požadoval rychlost, jednoduchost přehlednost a dobrou optimalizaci pro vyhledávače.",
-            Technologies = "Blazor, C#, Bootstrap, HTML, CSS",
-            ImagePath = "/images/content/sadrokartonyTrmota.webp"
-        },
-        new Project
-        {
-            Name = "Osobní portfolio",
-            Link = "http://davidbrach.cz/",
-            Description = "Moderní webová prezentace sloužící jako digitální vizitka. Představuje mé projekty, dovednosti a zkušenosti s důrazem na čistý design a responzivitu.",
-            Technologies = "Blazor, C#, Bootstrap, HTML, CSS",
-            ImagePath = "/images/content/docasna.webp"
-        }
-    };
+    private List<ReferenceProject> CommercialProjects { get; set; } = new();
+    private List<ReferenceProject> NonCommercialProjects { get; set; } = new();
+    private ReferenceProject? EditingProject { get; set; }
+    private bool IsAuthenticated = false;
 
-    private List<Project> NonCommercialProjects { get; set; } = new()
+    protected override async Task OnInitializedAsync()
     {
-        new Project
+        await CheckAuthentication();
+        await LoadProjects();
+    }
+
+    private async Task CheckAuthentication()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IsAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+
+    private async Task LoadProjects()
+    {
+        var projects = await DbContext.ReferenceProjects.ToListAsync();
+        CommercialProjects = projects.Where(p => p.IsCommercial).ToList();
+        NonCommercialProjects = projects.Where(p => !p.IsCommercial).ToList();
+        StateHasChanged();
+    }
+
+    private void StartEdit(ReferenceProject project)
+    {
+        EditingProject = new ReferenceProject
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Link = project.Link,
+                Description = project.Description,
+                Technologies = project.Technologies,
+                ImagePath = project.ImagePath,
+                IsCommercial = project.IsCommercial
+            };
+        StateHasChanged();
+    }
+
+    private void CancelEdit()
+    {
+        EditingProject = null;
+        StateHasChanged();
+    }
+
+    private async Task SaveChanges()
+    {
+        if (EditingProject != null)
         {
-            Name = "Family Budget",
-            Link = "https://github.com/brachdavid/FamilyBudget",
-            Description = "Konzolová aplikace zaměřená na správu rodinného rozpočtu. Nabízí intuitivní rozhraní pro sledování příjmů a výdajů, analýzu dat a základní statistiky.",
-            Technologies = "C#, OOP, LINQ, Validace",
-            ImagePath = "/images/content/familyBudget.webp"
+            var projectToUpdate = await DbContext.ReferenceProjects.FindAsync(EditingProject.Id);
+            if (projectToUpdate != null)
+            {
+                projectToUpdate.Name = EditingProject.Name;
+                projectToUpdate.Link = EditingProject.Link;
+                projectToUpdate.Description = EditingProject.Description;
+                projectToUpdate.Technologies = EditingProject.Technologies;
+                projectToUpdate.ImagePath = EditingProject.ImagePath;
+                projectToUpdate.IsCommercial = EditingProject.IsCommercial;
+
+                await DbContext.SaveChangesAsync();
+                EditingProject = null;
+                await LoadProjects();
+            }
         }
-        ,
-        new Project
+    }
+
+    private async Task DeleteProject(int id)
+    {
+        var project = await DbContext.ReferenceProjects.FindAsync(id);
+        if (project != null)
         {
-            Name = "Jobseekers",
-            Link = "https://github.com/brachdavid/Jobseekers",
-            Description = "Konzolová aplikace pro evidenci uchazečů o zaměstnání. Naučila mě pracovat s databázemi pomocí Entity Framework Core a SQL Serveru.",
-            Technologies = "C#, OOP, Entity Framework Core, SQL Server",
-            ImagePath = "/images/content/jobseekers.webp"
-        },
-        new Project
-        {
-            Name = "Task Manager",
-            Link = "https://github.com/brachdavid/TaskManager",
-            Description = "Robustní webová aplikace umožňující správu úkolů, klientů a zaměstnanců. Postaveno s využitím Blazoru a napojením na databázi SQL Server.",
-            Technologies = "C#, Blazor, Entity Framework Core, SQL Server, Identity ASP.NET Core, HTML, CSS, Bootstrap",
-            ImagePath = "/images/content/taskManager.webp"
+            DbContext.ReferenceProjects.Remove(project);
+            await DbContext.SaveChangesAsync();
+            await LoadProjects();
         }
-    };
+    }
 }

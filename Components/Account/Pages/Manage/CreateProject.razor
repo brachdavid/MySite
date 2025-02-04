@@ -1,0 +1,125 @@
+﻿@page "/pridat-projekt"
+
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Přidat projekt | David Břach</PageTitle>
+
+<h2 class="fs-2 text-uppercase fw-bold px-2 text-center">Přidat nový <span class="text-primary">projekt</span></h2>
+
+<EditForm Model="ProjectRequest" OnValidSubmit="ProcessForm">
+    <div class="container">
+        <hr />
+
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div class="alert alert-success">@SuccessMessage</div>
+        }
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger">@ErrorMessage</div>
+        }
+
+        <!-- Název projektu s počítáním znaků -->
+        <div class="mb-3">
+            <label class="form-label">Název projektu</label>
+            <InputText @bind-Value="ProjectRequest.Name" class="form-control" required @oninput="UpdateNameCharCount" maxlength="100" />
+            <small class="text-body-secondary">@NameCharCount / 100 znaků</small>
+        </div>
+
+        <!-- Odkaz na projekt -->
+        <div class="mb-3">
+            <label class="form-label">Odkaz na projekt</label>
+            <InputText @bind-Value="ProjectRequest.Link" class="form-control" placeholder="https://example.com" required />
+        </div>
+
+        <!-- Popis projektu s počítáním znaků -->
+        <div class="mb-3">
+            <label class="form-label">Popis projektu</label>
+            <InputTextArea @bind-Value="ProjectRequest.Description" class="form-control" @oninput="UpdateDescriptionCharCount" maxlength="500" />
+            <small class="text-body-secondary">@DescriptionCharCount / 500 znaků</small>
+        </div>
+
+        <!-- Technologie -->
+        <div class="mb-3">
+            <label class="form-label">Technologie (oddělené čárkou)</label>
+            <InputTextArea @bind-Value="ProjectRequest.Technologies" class="form-control" placeholder="např. Blazor, C#, Web Development" />
+            <small class="text-body-secondary">Použij čárku pro oddělení technologií.</small>
+        </div>
+
+        <!-- Odkaz na obrázek -->
+        <div class="mb-3">
+            <label class="form-label">URL obrázku</label>
+            <InputText @bind-Value="ProjectRequest.ImagePath" class="form-control" placeholder="/images/example.jpg" />
+        </div>
+
+        <!-- Typ projektu -->
+        <div class="mb-3">
+            <label class="form-label">Typ projektu</label>
+            <InputSelect @bind-Value="ProjectRequest.IsCommercial" class="form-control">
+                <option value="true">Komerční</option>
+                <option value="false">Nekomerční</option>
+            </InputSelect>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Uložit projekt</button>
+    </div>
+</EditForm>
+
+@code {
+    private string SuccessMessage = "";
+    private string ErrorMessage = "";
+
+    private ProjectDTO ProjectRequest { get; set; } = new();
+
+    private int NameCharCount => ProjectRequest.Name.Length;
+    private int DescriptionCharCount => ProjectRequest.Description.Length;
+
+    private void UpdateNameCharCount(ChangeEventArgs e)
+    {
+        ProjectRequest.Name = e.Value?.ToString() ?? "";
+    }
+
+    private void UpdateDescriptionCharCount(ChangeEventArgs e)
+    {
+        ProjectRequest.Description = e.Value?.ToString() ?? "";
+    }
+
+    private async Task ProcessForm()
+    {
+        try
+        {
+            var newProject = new ReferenceProject
+                {
+                    Name = ProjectRequest.Name,
+                    Link = ProjectRequest.Link,
+                    Description = ProjectRequest.Description,
+                    Technologies = ProjectRequest.Technologies,
+                    ImagePath = ProjectRequest.ImagePath,
+                    IsCommercial = ProjectRequest.IsCommercial
+                };
+
+            DbContext.ReferenceProjects.Add(newProject);
+            await DbContext.SaveChangesAsync();
+
+            SuccessMessage = "Projekt byl úspěšně přidán!";
+            ProjectRequest = new ProjectDTO();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Chyba při ukládání projektu: {ex.Message}";
+        }
+    }
+
+    private sealed class ProjectDTO
+    {
+        public string Name { get; set; } = "";
+        public string Link { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Technologies { get; set; } = "";
+        public string ImagePath { get; set; } = "";
+        public bool IsCommercial { get; set; } = true;
+    }
+}

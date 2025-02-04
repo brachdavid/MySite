@@ -40,9 +40,9 @@ namespace MySite
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-     .AddEntityFrameworkStores<ApplicationDbContext>()
-     .AddSignInManager()
-     .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
 
             // Zde pøidáváme konfiguraci pøihlašovací stránky
             builder.Services.ConfigureApplicationCookie(options =>

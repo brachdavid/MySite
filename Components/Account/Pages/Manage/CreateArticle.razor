@@ -1,1 +1,114 @@
 ﻿@page "/pridat-clanek"
+
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Přidat článek | David Břach</PageTitle>
+
+<h2 class="fs-2 text-uppercase fw-bold px-2 text-center">Přidat nový <span class="text-primary">článek</span></h2>
+
+<EditForm Model="ArticleRequest" OnValidSubmit="ProcessForm">
+    <div class="container">
+        <hr />
+
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div class="alert alert-success">@SuccessMessage</div>
+        }
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger">@ErrorMessage</div>
+        }
+
+        <!-- Titulek s počítáním znaků -->
+        <div class="mb-3">
+            <label class="form-label">Titulek</label>
+            <InputText @bind-Value="ArticleRequest.Title" class="form-control" required @oninput="UpdateTitleCharCount" maxlength="200" />
+            <small class="text-body-secondary">@TitleCharCount / 200 znaků</small>
+        </div>
+
+        <!-- Perex s počítáním znaků -->
+        <div class="mb-3">
+            <label class="form-label">Perex</label>
+            <InputTextArea @bind-Value="ArticleRequest.Perex" class="form-control" @oninput="UpdatePerexCharCount" maxlength="300" />
+            <small class="text-body-secondary">@PerexCharCount / 300 znaků</small>
+        </div>
+
+        <!-- Klíčová slova -->
+        <div class="mb-3">
+            <label class="form-label">Klíčová slova (oddělená čárkou)</label>
+            <InputTextArea @bind-Value="ArticleRequest.Keywords" class="form-control" placeholder="např. Blazor, C#, Web Development" />
+            <small class="text-body-secondary">Použij čárku pro oddělení slov.</small>
+        </div>
+
+        <!-- Komponenta pro správu obsahu článku -->
+        <div class="mb-3">
+            <label class="form-label">Obsah článku</label>
+            <ArticleEditor Blocks="@ArticleRequest.Blocks" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">URL obrázku</label>
+            <InputText @bind-Value="ArticleRequest.ImageUrl" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Uložit článek</button>
+    </div>
+</EditForm>
+
+@code {
+    private string SuccessMessage = "";
+    private string ErrorMessage = "";
+
+    private ArticleDTO ArticleRequest { get; set; } = new();
+
+    private int TitleCharCount => ArticleRequest.Title.Length;
+    private int PerexCharCount => ArticleRequest.Perex.Length;
+
+    private void UpdateTitleCharCount(ChangeEventArgs e)
+    {
+        ArticleRequest.Title = e.Value?.ToString() ?? "";
+    }
+
+    private void UpdatePerexCharCount(ChangeEventArgs e)
+    {
+        ArticleRequest.Perex = e.Value?.ToString() ?? "";
+    }
+
+    private async Task ProcessForm()
+    {
+        try
+        {
+            var newArticle = new BlogArticle
+            {
+                Title = ArticleRequest.Title,
+                Perex = ArticleRequest.Perex,
+                Keywords = ArticleRequest.Keywords,
+                Content = JsonSerializer.Serialize(ArticleRequest.Blocks), // Ukládáme bloky jako JSON
+                ImageUrl = ArticleRequest.ImageUrl,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            DbContext.BlogArticles.Add(newArticle);
+            await DbContext.SaveChangesAsync();
+
+            SuccessMessage = "Článek byl úspěšně přidán!";
+            ArticleRequest = new ArticleDTO();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Chyba při ukládání článku: {ex.Message}";
+        }
+    }
+
+    private sealed class ArticleDTO
+    {
+        public string Title { get; set; } = "";
+        public string Perex { get; set; } = "";
+        public string Keywords { get; set; } = "";
+        public List<ArticleBlock> Blocks { get; set; } = new();
+        public string? ImageUrl { get; set; }
+    }
+}

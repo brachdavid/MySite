@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySite.Data;
 
@@ -11,9 +12,11 @@ using MySite.Data;
 namespace MySite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250203222941_AddKeywordsToArticles")]
+    partial class AddKeywordsToArticles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,94 +258,6 @@ namespace MySite.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BlogArticles");
-                });
-
-            modelBuilder.Entity("MySite.Models.ReferenceProject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCommercial")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Link")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Technologies")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReferenceProjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Moje první komerční zakázka - webová stránka pro lokálního řemeslníka. Klient požadoval rychlost, jednoduchost přehlednost a dobrou optimalizaci pro vyhledávače.",
-                            ImagePath = "/images/content/sadrokartonyTrmota.webp",
-                            IsCommercial = true,
-                            Link = "http://sadrokartonytrmota.cz/",
-                            Name = "Sádrokartony Trmota",
-                            Technologies = "Blazor, C#, Bootstrap, HTML, CSS"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Moderní webová prezentace sloužící jako digitální vizitka. Představuje mé projekty, dovednosti a zkušenosti s důrazem na čistý design a responzivitu.",
-                            ImagePath = "/images/content/docasna.webp",
-                            IsCommercial = true,
-                            Link = "http://davidbrach.cz/",
-                            Name = "Osobní portfolio",
-                            Technologies = "Blazor, C#, Bootstrap, HTML, CSS"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Konzolová aplikace zaměřená na správu rodinného rozpočtu. Nabízí intuitivní rozhraní pro sledování příjmů a výdajů, analýzu dat a základní statistiky.",
-                            ImagePath = "/images/content/familyBudget.webp",
-                            IsCommercial = false,
-                            Link = "https://github.com/brachdavid/FamilyBudget",
-                            Name = "Family Budget",
-                            Technologies = "C#, OOP, LINQ, Validace"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Konzolová aplikace pro evidenci uchazečů o zaměstnání. Naučila mě pracovat s databázemi pomocí Entity Framework Core a SQL Serveru.",
-                            ImagePath = "/images/content/jobseekers.webp",
-                            IsCommercial = false,
-                            Link = "https://github.com/brachdavid/Jobseekers",
-                            Name = "Jobseekers",
-                            Technologies = "C#, OOP, Entity Framework Core, SQL Server"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Robustní webová aplikace umožňující správu úkolů, klientů a zaměstnanců. Postaveno s využitím Blazoru a napojením na databázi SQL Server.",
-                            ImagePath = "/images/content/taskManager.webp",
-                            IsCommercial = false,
-                            Link = "https://github.com/brachdavid/TaskManager",
-                            Name = "Task Manager",
-                            Technologies = "C#, Blazor, Entity Framework Core, SQL Server, Identity ASP.NET Core, HTML, CSS, Bootstrap"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

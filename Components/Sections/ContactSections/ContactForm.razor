@@ -2,7 +2,7 @@
 @inject IConfiguration Configuration
 @inject IEmailSender EmailSender
 
-<section id="contactForm" class="card rounded-4 shadow-lg h-100 p-4 px-lg-2 px-xl-4">
+<section id="contactForm" class="card rounded-5 shadow-lg h-100 p-4 px-lg-2 px-xl-4">
     <EditForm Enhance Model="EmailRequest" FormName="EmailForm" OnSubmit="ProcessForm">
         <div class="container">
             <h3 class="fs-3 text-uppercase fw-bold px-2 text-center"><span class="text-primary">Kontaktní</span> formulář</h3>
@@ -53,7 +53,7 @@
                 <p class="small">Vyplněním a odesláním tohoto formuláře souhlasíte se <a href="/zasady-ochrany-osobnich-udaju" class="text-decoration-none">zpracováním vašich osobních údajů</a>. Tyto informace nebudou použity k marketingovým účelům ani nebudou zpřístupněny třetím stranám.</p>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-1"><span class="lead text-uppercase fw-bold">Odeslat</span></button>
+            <button type="submit" class="btn btn-primary w-100 mt-1 rounded-pill"><span class="lead text-uppercase fw-bold">Odeslat</span></button>
         </div>
 
     </EditForm>

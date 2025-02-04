@@ -1,0 +1,40 @@
+﻿<div class="border p-3 rounded shadow-sm bg-light">
+    <h4 class="fw-bold">Správa obsahu článku</h4>
+
+    @if (Blocks.Count == 0)
+    {
+        <p class="text-muted">⚠️ Zatím nejsou přidány žádné bloky. Přidej první blok!</p>
+    }
+
+    @foreach (var block in Blocks)
+    {
+        <div class="mb-3 p-2 border rounded bg-white">
+            <select class="form-select mb-2" @bind="block.Type">
+                <option value="@ArticleBlockType.Heading">Nadpis</option>
+                <option value="@ArticleBlockType.Paragraph">Odstavec</option>
+                <option value="@ArticleBlockType.ImageUrl">URL obrázku</option>
+            </select>
+
+           <textarea class="form-control" rows="3" @bind="block.Content" placeholder="Vlož text..."></textarea>
+
+           <button type="button" class="btn btn-sm btn-danger mt-2" @onclick="() => RemoveBlock(block)">❌ Odebrat blok</button>
+        </div>
+    }
+
+    <button type="button" class="btn btn-primary mt-2" @onclick="AddBlock">➕ Přidat blok</button>
+</div>
+
+@code {
+    [Parameter]
+    public List<ArticleBlock> Blocks { get; set; } = new();
+
+    private void AddBlock()
+    {
+        Blocks.Add(new ArticleBlock());
+    }
+
+    private void RemoveBlock(ArticleBlock block)
+    {
+        Blocks.Remove(block);
+    }
+}

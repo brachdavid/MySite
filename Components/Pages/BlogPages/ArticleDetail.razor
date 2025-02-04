@@ -1,0 +1,193 @@
+﻿@page "/clanek/{id:int}"
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<HeadContent>
+    <meta name="description" content="@Article?.Perex">
+    <meta name="keywords" content="@Article?.Keywords">
+    <meta property="og:description" content="@Article?.Perex">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="@Article?.ImageUrl">
+    <meta property="og:url" content="@NavigationManager.Uri">
+</HeadContent>
+
+<PageTitle>@(Article?.Title ?? "Článek nenalezen") | David Břach</PageTitle>
+
+@if (IsLoading)
+{
+    <p>Načítání...</p>
+}
+else if (Article == null)
+{
+    <p>Článek nenalezen.</p>
+}
+else
+{
+    <section id="articleDetail" style="padding-top: 100px;" class="pb-5">
+        <div class="container text-center col-11 col-md-10 col-lg-12 col-xl-10 d-flex justify-content-center card rounded-5 py-4 p-md-4">
+            <h1 class="text-uppercase fw-bold px-2 text-primary">@Article.Title</h1>
+            <p class="text-body-secondary fst-italic">Datum vytvoření: @Article.CreatedAt.ToString("dd. MM. yyyy HH:mm")</p>
+
+            <hr />
+
+            <div class="container col-lg-6">
+                @if (!string.IsNullOrEmpty(Article.ImageUrl))
+                {
+                    <img src="@Article.ImageUrl" class="img-fluid pb-3" loading="lazy" />
+                }
+            </div>
+
+            <div class="container col-lg-9 lead">
+                @if (IsEditing)
+                {
+                    <EditForm Model="Article" OnValidSubmit="SaveChanges">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label class="form-label">Titulek</label>
+                            <InputText @bind-Value="Article.Title" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">URL obrázku</label>
+                            <InputText @bind-Value="Article.ImageUrl" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Perex</label>
+                            <InputText @bind-Value="Article.Perex" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Klíčová slova</label>
+                            <InputText @bind-Value="Article.Keywords" class="form-control" />
+                        </div>
+
+                        <!-- 📝 Použití ArticleEditor pro správu obsahu -->
+                        <div class="mb-3">
+                            <label class="form-label">Obsah článku</label>
+                            <ArticleEditor Blocks="@Blocks" />
+                        </div>
+
+                        <button type="submit" class="btn btn-lg rounded-pill btn-success">💾 Uložit změny</button>
+                        <button type="button" class="btn btn-lg rounded-pill btn-secondary ms-2" @onclick="CancelEdit">❌ Zrušit</button>
+                    </EditForm>
+                }
+                else
+                {
+                    @foreach (var block in Blocks)
+                    {
+                        if (block.Type == ArticleBlockType.Heading)
+                        {
+                            <h2 class="fw-bold">@block.Content</h2>
+                        }
+                        else if (block.Type == ArticleBlockType.Paragraph)
+                        {
+                            <p>@((MarkupString)block.Content)</p>
+                        }
+                        else if (block.Type == ArticleBlockType.ImageUrl)
+                        {
+                            <div class="container col-lg-8">
+                                <img src="@block.Content" class="img-fluid my-2" loading="lazy"/>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+
+            <hr />
+
+            <div class="container lead">
+                @if (IsAuthenticated)
+                {
+                    <button class="btn btn-lg rounded-pill btn-warning mt-2" @onclick="EnableEdit">✏️ Upravit</button>
+                    <button class="btn btn-lg rounded-pill btn-danger mt-2" @onclick="DeleteArticle">🗑 Smazat článek</button>
+                }
+            </div>
+            <div class="container mt-2 lead">
+                <a href="/blog" class="btn btn-lg rounded-pill btn-outline-primary" @onclick="Refresh">← Zpět na články</a>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private BlogArticle? Article { get; set; }
+    private List<ArticleBlock> Blocks { get; set; } = new();
+    private bool IsLoading = true;
+    private bool IsEditing = false;
+    private bool IsAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthentication();
+        await LoadArticle();
+    }
+
+    private async Task CheckAuthentication()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IsAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+
+    private async Task LoadArticle()
+    {
+        Article = await DbContext.BlogArticles.FindAsync(Id);
+        IsLoading = false;
+
+        if (Article != null && !string.IsNullOrEmpty(Article.Content))
+        {
+            try
+            {
+                Blocks = JsonSerializer.Deserialize<List<ArticleBlock>>(Article.Content) ?? new List<ArticleBlock>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Chyba při načítání obsahu článku: {ex.Message}");
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private void EnableEdit()
+    {
+        IsEditing = true;
+    }
+
+    private void CancelEdit()
+    {
+        IsEditing = false;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (Article != null)
+        {
+            Article.Content = JsonSerializer.Serialize(Blocks); // Ukládáme bloky jako JSON
+            DbContext.BlogArticles.Update(Article);
+            await DbContext.SaveChangesAsync();
+            IsEditing = false;
+        }
+    }
+
+    private async Task DeleteArticle()
+    {
+        if (Article != null)
+        {
+            DbContext.BlogArticles.Remove(Article);
+            await DbContext.SaveChangesAsync();
+            NavigationManager.NavigateTo("/blog");
+        }
+    }
+
+    private void Refresh()
+    {
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}
