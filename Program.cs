@@ -1,13 +1,16 @@
-using Microsoft.AspNetCore.Components.Authorization;
+Ôªøusing Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.ResponseCompression; // P≈ôid√°no pro kompresi
 using MySite.Components;
 using MySite.Components.Account;
 using MySite.Data;
-using MySite.Services; // P¯edpokl·d·me, ûe t¯Ìdy MailKitEmailSender a SmtpSettings jsou zde
+using MySite.Services;
 using System.Linq;
 using MySite.Models;
+using System.Security.Cryptography;
+using System.IO.Compression; // P≈ôid√°no pro √∫rovnƒõ komprese
 
 namespace MySite
 {
@@ -17,7 +20,26 @@ namespace MySite
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // ‚úÖ P≈ôid√°n√≠ podpory pro kompresi odpovƒõd√≠
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true; // Komprese i pro HTTPS
+                options.Providers.Add<BrotliCompressionProvider>(); // Brotli komprese
+                options.Providers.Add<GzipCompressionProvider>(); // Gzip komprese
+            });
+
+            // ‚úÖ Nastaven√≠ √∫rovnƒõ komprese (nejlep≈°√≠ kvalita)
+            builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            // ‚úÖ Standardn√≠ slu≈æby
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
@@ -44,35 +66,30 @@ namespace MySite
             .AddSignInManager()
             .AddDefaultTokenProviders();
 
-            // Zde p¯id·v·me konfiguraci p¯ihlaöovacÌ str·nky
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/prihlaseni"; // P¯esmÏrov·nÌ na vlastnÌ login str·nku
+                options.LoginPath = "/prihlaseni";
                 options.LogoutPath = "/odhlaseni";
-                options.AccessDeniedPath = "/"; // Kam poslat uûivatele bez opr·vnÏnÌ
+                options.AccessDeniedPath = "/";
             });
 
-            // Starou implementaci nahrazujeme novou registracÌ:
-            // builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
-            // NaËtenÌ SMTP nastavenÌ z konfigurace (sekce "SmtpSettings" v appsettings.json)
+            // SMTP nastaven√≠
             builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
-            // Registrace univerz·lnÌho email senderu zaloûenÈho na MailKit
             builder.Services.AddSingleton<IEmailSender, MailKitEmailSender>();
 
             var app = builder.Build();
 
-            // ProvedenÌ migracÌ a seed administr·torskÈho uûivatele
+            // ‚úÖ Aktivace middleware pro kompresi
+            app.UseResponseCompression();
+
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
                 {
-                    // Aplikace migracÌ
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.Migrate();
 
-                    // Seed administr·torskÈho uûivatele
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var adminEmail = builder.Configuration["AdminUser:Email"];
                     var adminPassword = builder.Configuration["AdminUser:Password"];
@@ -96,19 +113,18 @@ namespace MySite
                         if (!result.Succeeded)
                         {
                             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                            throw new Exception($"Administr·torsk˝ uûivatel nemohl b˝t vytvo¯en: {errors}");
+                            throw new Exception($"Administr√°torsk√Ω u≈æivatel nemohl b√Ωt vytvo≈ôen: {errors}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Chyba p¯i seedov·nÌ administr·torskÈho uûivatele.");
+                    logger.LogError(ex, "Chyba p≈ôi seedov√°n√≠ administr√°torsk√©ho u≈æivatele.");
                     throw;
                 }
             }
 
-            // Konfigurace HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -116,9 +132,31 @@ namespace MySite
             else
             {
                 app.UseExceptionHandler("/Error");
-                // V˝chozÌ hodnota HSTS je 30 dnÌ; pro produkci to m˘ûeö dle pot¯eby zmÏnit.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                var nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)); // Generuje bezpeƒçn√Ω nonce
+                var headers = context.Response.Headers;
+
+                headers.ContentSecurityPolicy =
+                    "default-src 'self'; " +
+                    "script-src 'self' 'nonce-" + nonce + "' 'strict-dynamic' https://cdn.jsdelivr.net; " +
+                    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
+                    "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
+                    "img-src 'self' data:; " +
+                    "connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:*; " +
+                    "frame-ancestors 'self';";
+
+                headers.XFrameOptions = "SAMEORIGIN";
+                headers.XContentTypeOptions = "nosniff";
+                headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+                headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
+
+                context.Items["CSPNonce"] = nonce;
+                await next();
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -127,7 +165,6 @@ namespace MySite
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
-            // P¯id·nÌ dalöÌch endpoint˘ pot¯ebn˝ch pro Identity /Account Razor komponenty.
             app.MapAdditionalIdentityEndpoints();
 
             await app.RunAsync();
