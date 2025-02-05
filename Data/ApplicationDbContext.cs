@@ -27,11 +27,11 @@ namespace MySite.Data
                 new ReferenceProject
                 {
                     Id = 2,
-                    Name = "Osobní portfolio",
+                    Name = "Moje webové stránky",
                     Link = "http://davidbrach.cz/",
                     Description = "Moderní webová prezentace sloužící jako digitální vizitka. Pøedstavuje mé projekty, dovednosti a zkušenosti s dùrazem na èistý design a responzivitu.",
                     Technologies = "Blazor, C#, Bootstrap, HTML, CSS",
-                    ImagePath = "/images/content/docasna.webp",
+                    ImagePath = "/images/content/mojeStranky.webp",
                     IsCommercial = true
                 },
                 new ReferenceProject

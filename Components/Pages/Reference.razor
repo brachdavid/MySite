@@ -27,7 +27,7 @@
                         <div class="col d-flex">
                             <div class="h-100 w-100">
                                 <a href="@project.Link">
-                                    <img src="@project.ImagePath" class="card-img-top img-fluid preview-image" loading="lazy" />
+                                    <img src="@project.ImagePath" alt="@project.Name" class="card-img-top img-fluid preview-image" loading="lazy" />
                                 </a>
                                 <div class="card-body">
                                     @if (EditingProject?.Id == project.Id)
@@ -81,7 +81,7 @@
                         <div class="col d-flex">
                             <div class="card h-100 w-100 shadow-sm">
                                 <a href="@project.Link">
-                                    <img src="@project.ImagePath" class="card-img-top img-fluid preview-image" loading="lazy" />
+                                    <img src="@project.ImagePath" alt="@project.Name" class="card-img-top img-fluid preview-image" loading="lazy" />
                                 </a>
                                 <div class="card-body d-flex flex-column">
                                     @if (EditingProject?.Id == project.Id)

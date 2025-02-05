@@ -37,7 +37,8 @@ else
             <div class="container col-lg-6">
                 @if (!string.IsNullOrEmpty(Article.ImageUrl))
                 {
-                    <img src="@Article.ImageUrl" class="img-fluid pb-3" loading="lazy" />
+                    <img src="@Article.ImageUrl" class="img-fluid" loading="lazy" />
+                    <p class="small fst-italic m-0 pb-3">Zdroj fotografie: Pixabay.com</p>
                 }
             </div>
 
@@ -92,7 +93,7 @@ else
                         else if (block.Type == ArticleBlockType.ImageUrl)
                         {
                             <div class="container col-lg-8">
-                                <img src="@block.Content" class="img-fluid my-2" loading="lazy"/>
+                                <img src="@block.Content" class="img-fluid mt-2" loading="lazy"/>
                             </div>
                         }
                     }
