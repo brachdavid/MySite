@@ -131,7 +131,7 @@ namespace MySite
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/");
                 app.UseHsts();
             }
 
@@ -142,11 +142,11 @@ namespace MySite
 
                 headers.ContentSecurityPolicy =
                     "default-src 'self'; " +
-                    "script-src 'self' 'nonce-" + nonce + "' 'strict-dynamic' https://cdn.jsdelivr.net; " +
+                    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
                     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
                     "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
-                    "img-src 'self' data:; " +
-                    "connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:*; " +
+                    "img-src 'self' data: https://toplist.cz https://www.davidbrach.cz; " +
+                    "connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:* wss://www.davidbrach.cz; " +
                     "frame-ancestors 'self';";
 
                 headers.XFrameOptions = "SAMEORIGIN";
@@ -157,6 +157,7 @@ namespace MySite
                 context.Items["CSPNonce"] = nonce;
                 await next();
             });
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

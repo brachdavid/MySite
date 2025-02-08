@@ -1,46 +1,21 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@{
-    var nonce = HttpContextAccessor.HttpContext?.Items["CSPNonce"] as string;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="cs">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="language" content="cs">
-    <meta name="description" content="Jsem David Břach a tvořím moderní webové stránky. Kladu důraz na maximální rychlost, atraktivní design a správnou funkcionalitu." />
-    <meta name="robots" content="index, follow" />
     <meta name="author" content="David Břach" />
 
-    <!-- Open Graph Metadata -->
-    <meta property="og:title" content="David Břach | Vývoj webových aplikací v C#" />
-    <meta property="og:description" content="Specializuji se na tvorbu webových stránek a aplikací. Moderní a responzivní weby na míru." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.davidbrach.cz/" />
-    <meta property="og:image" content="https://www.davidbrach.cz/images/brand/coding.webp" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="David Břach | Webové aplikace v C# a Blazor" />
-    <meta name="twitter:description" content="Vyvíjím moderní webové stránky a aplikace. Kvalitní, rychlé a přizpůsobené vašim potřebám." />
-    <meta name="twitter:image" content="https://www.davidbrach.cz/images/brand/coding.webp" />
-
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline';
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
     style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/bootstrap-icons/;
     font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/bootstrap-icons/;
-    img-src 'self' data:;
-    connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:*;">
+    img-src 'self' data: https://toplist.cz https://www.davidbrach.cz;
+    connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:* wss://www.davidbrach.cz;">
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()" />
-
-
-    <link rel="canonical" href="https://www.davidbrach.cz">
-    <base href="/" />
 
     <!-- Favicon -->
     <link rel="icon" href="/images/brand/logo.webp" type="image/x-icon" />
@@ -88,18 +63,18 @@
 
 <body class="bg-primary" style="--bs-bg-opacity: .07;">
     <Routes />
-    <script nonce="@nonce" src="_framework/blazor.web.js" defer></script>
+    <script src="_framework/blazor.web.js" defer></script>
     <!--Bootstrap JavaScript-->
-    <script nonce="@nonce" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
     <!--Toplist měřicí kód-->
-    <a href="https://www.toplist.cz" id="toplistcz1838940" title="TOPlist">
+    <a href="https://www.toplist.cz" id="toplistcz1838940" title="TOPlist" class="position-absolute">
         <noscript>
-            <img src="https://toplist.cz/dot.asp?id=1838940&njs=1" border="0"
-                 alt="TOPlist" width="1" height="1" />
-        </noscript><script language="JavaScript">
+            <img src="https://toplist.cz/dot.asp?id=1838940&njs=1" class="position-absolute" border="0"
+                 alt="TOPlist" width="0" height="0" />
+        </noscript><script language="JavaScript" async>
                        (function(d,e,s) {d.getElementById('toplistcz1838940').innerHTML='<img src="https://toplist.cz/dot.asp?id=1838940&http='+
                        e(d.referrer)+'&t='+e(d.title)+'&l='+e(d.URL)+'&wi='+e(s.width)+'&he='+e(s.height)+'&cd='+
-                       e(s.colorDepth)+'" width="1" height="1" border="0" alt="TOPlist" />';
+                       e(s.colorDepth)+'" width="0" height="0" border="0" alt="TOPlist" />';
                        }(document,encodeURIComponent,window.screen))
         </script>
     </a>

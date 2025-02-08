@@ -1,21 +1,36 @@
 ﻿@page "/clanek/{id:int}"
-@using Microsoft.AspNetCore.Components.Authorization
-@using System.Text.Json
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext DbContext
-@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
+<PageTitle>@(Article?.Title ?? "Článek nenalezen") | David Břach</PageTitle>
+
 <HeadContent>
+    <meta name="robots" content="index, follow" />
     <meta name="description" content="@Article?.Perex">
     <meta name="keywords" content="@Article?.Keywords">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="@Article?.Title">
     <meta property="og:description" content="@Article?.Perex">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="@Article?.ImageUrl">
+    <meta property="og:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://www.davidbrach.cz/images/brand/default-article.webp" : Article.ImageUrl)">
     <meta property="og:url" content="@NavigationManager.Uri">
-</HeadContent>
+    <meta property="og:site_name" content="David Břach | Blog">
+    <meta property="og:locale" content="cs_CZ">
 
-<PageTitle>@(Article?.Title ?? "Článek nenalezen") | David Břach</PageTitle>
+    <!-- Article-specific Open Graph Tags -->
+    <meta property="article:published_time" content="@Article?.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ")">
+    <meta property="article:author" content="David Břach">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@Article?.Title">
+    <meta name="twitter:description" content="@Article?.Perex">
+    <meta name="twitter:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://www.davidbrach.cz/images/content/jobseekers.webp" : Article.ImageUrl)">
+
+    <link rel="canonical" href="@NavigationManager.Uri">
+</HeadContent>
 
 @if (IsLoading)
 {
@@ -38,7 +53,7 @@ else
                 @if (!string.IsNullOrEmpty(Article.ImageUrl))
                 {
                     <img src="@Article.ImageUrl" class="img-fluid" loading="lazy" />
-                    <p class="small fst-italic m-0 pb-3">Zdroj fotografie: Pixabay.com</p>
+                    <p class="small fst-italic m-0 pb-3">Zdroj fotografie: @Article.ImageSource</p>
                 }
             </div>
 
@@ -56,6 +71,11 @@ else
                         <div class="mb-3">
                             <label class="form-label">URL obrázku</label>
                             <InputText @bind-Value="Article.ImageUrl" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Zdroj obrázku</label>
+                            <InputText @bind-Value="Article.ImageSource" class="form-control" />
                         </div>
 
                         <div class="mb-3">
