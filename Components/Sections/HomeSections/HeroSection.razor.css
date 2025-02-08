@@ -12,3 +12,18 @@
     min-height: 100vh; /* Zajistí, že sekce zabírá minimálně celý viewport */
     position: relative; /* Zabrání tomu, aby absolutní obrázek "utekl" */
 }
+
+#heroCarousel {
+    height: 100vh;
+}
+
+/* Specifické úpravy pro mobilní zařízení v režimu landscape */
+@media screen and (max-width: 950px) and (orientation: landscape) {
+    #heroCarousel {
+        height: auto !important;
+    }
+
+    #carouselInner {
+        padding-top: 80px !important;
+    }
+}
