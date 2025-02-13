@@ -14,7 +14,7 @@
     <meta property="og:title" content="@Article?.Title">
     <meta property="og:description" content="@Article?.Perex">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://www.davidbrach.cz/images/brand/default-article.webp" : Article.ImageUrl)">
+    <meta property="og:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://davidbrach.cz/images/content/jobseekers.webp" : Article.ImageUrl)">
     <meta property="og:url" content="@NavigationManager.Uri">
     <meta property="og:site_name" content="David Břach | Blog">
     <meta property="og:locale" content="cs_CZ">
@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="@Article?.Title">
     <meta name="twitter:description" content="@Article?.Perex">
-    <meta name="twitter:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://www.davidbrach.cz/images/content/jobseekers.webp" : Article.ImageUrl)">
+    <meta name="twitter:image" content="@(string.IsNullOrEmpty(Article?.ImageUrl) ? "https://davidbrach.cz/images/content/jobseekers.webp" : Article.ImageUrl)">
 
     <link rel="canonical" href="@NavigationManager.Uri">
 </HeadContent>
