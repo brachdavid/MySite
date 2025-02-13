@@ -1,4 +1,4 @@
-﻿@page "/clanek/{id:int}"
+﻿@page "/clanek/{id:int}" 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext DbContext
 @rendermode InteractiveServer
@@ -130,7 +130,10 @@ else
                 }
             </div>
             <div class="container mt-2 lead">
-                <a href="/blog" class="btn btn-lg rounded-pill btn-outline-primary" @onclick="Refresh">← Zpět na články</a>
+                <a href="/blog" class="btn btn-lg rounded-pill btn-outline-primary"
+                   @onclick="@(async () => NavigationManager.NavigateTo("/blog", forceLoad: true))">
+                    ← Zpět na články
+                </a>
             </div>
         </div>
     </section>
@@ -205,10 +208,5 @@ else
             await DbContext.SaveChangesAsync();
             NavigationManager.NavigateTo("/blog");
         }
-    }
-
-    private void Refresh()
-    {
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }

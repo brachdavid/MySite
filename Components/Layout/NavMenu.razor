@@ -1,7 +1,7 @@
 ﻿<nav id="navbar" class="navbar navbar-expand-lg py-3 fixed-top position-absolute bg-black lead" data-bs-theme="dark">
     <div class="container-fluid col-xl-11 col-xxl-10">
-        <a class="navbar-brand d-flex align-items-center" href="/" @onclick="ForceRefresh" Match="NavLinkMatch.All">
-            <img src="images/brand/logoNavMenu.webp" alt="Logo" loanding="lazy" class="nav-logo">
+        <a class="navbar-brand d-flex align-items-center" href="/" @onclick="@(async () => NavigationManager.NavigateTo("/", forceLoad: true))" Match="NavLinkMatch.All">
+            <img src="https://davidbrach.cz/images/brand/logoNavMenu.webp" alt="Logo" loanding="lazy" class="nav-logo">
         </a>
 
         <button class="navbar-toggler" type="button" @onclick="ToggleMenu" aria-controls="navbarNav" aria-expanded="@IsMenuOpen" aria-label="Toggle navigation">
@@ -11,32 +11,33 @@
         <div class="collapse navbar-collapse @(IsMenuOpen ? "show" : "")" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-lg-2">
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="/" @onclick="ForceRefresh" Match="NavLinkMatch.All">Úvod</NavLink>
+                    <NavLink class="nav-link" href="/" @onclick="@(async () => NavigationManager.NavigateTo("/", forceLoad: true))" Match="NavLinkMatch.All">Úvod</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="/o-mne" @onclick="ForceRefresh">O mně</NavLink>
+                    <NavLink class="nav-link" href="/o-mne" @onclick="@(async () => NavigationManager.NavigateTo("/o-mne", forceLoad: true))">O mně</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="/prubeh-spoluprace" @onclick="ForceRefresh">Průběh spolupráce</NavLink>
+                    <NavLink class="nav-link" href="/prubeh-spoluprace" @onclick="@(async () => NavigationManager.NavigateTo("/prubeh-spoluprace", forceLoad: true))">Průběh spolupráce</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="/reference" @onclick="ForceRefresh">Reference</NavLink>
+                    <NavLink href="/reference" class="nav-link" @onclick="@(async () => NavigationManager.NavigateTo("/reference", forceLoad: true))">Reference</NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="/blog" @onclick="ForceRefresh">Blog</NavLink>
+                    <NavLink href="/blog" class="nav-link" @onclick="@(async () => NavigationManager.NavigateTo("/blog", forceLoad: true))">Blog</NavLink>
+
                 </li>
                 <AuthorizeView>
                     <Authorized>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="/admin" @onclick="ForceRefresh">Admin</NavLink>
+                            <NavLink class="nav-link" href="/admin" @onclick="@(async () => NavigationManager.NavigateTo("/admin", forceLoad: true))">Admin</NavLink>
                         </li>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="/odhlaseni" @onclick="ForceRefresh">Odhlásit</NavLink>
+                            <NavLink class="nav-link" href="/odhlaseni" @onclick="@(async () => NavigationManager.NavigateTo("/odhlaseni", forceLoad: true))">Odhlásit</NavLink>
                         </li>
                     </Authorized>
                 </AuthorizeView>
                 <li class="nav-item">
-                    <NavLink class="btn btn-primary rounded-pill fs-5 py-1 px-4" href="/kontakt" @onclick="ForceRefresh">Kontakt</NavLink>
+                    <NavLink class="btn btn-primary rounded-pill fs-5 py-1 px-4" href="/kontakt" @onclick="@(async () => NavigationManager.NavigateTo("/kontakt", forceLoad: true))">Kontakt</NavLink>
                 </li>
             </ul>
         </div>
@@ -52,11 +53,6 @@
 
 @code {
     private bool IsMenuOpen = false;
-
-    private void ForceRefresh()
-    {
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
-    }
 
     private void ToggleMenu()
     {

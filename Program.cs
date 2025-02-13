@@ -145,7 +145,7 @@ namespace MySite
                     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
                     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
                     "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/bootstrap-icons/; " +
-                    "img-src 'self' data: https://toplist.cz https://www.davidbrach.cz; " +
+                    "img-src 'self' data: https://www.firmy.cz https://toplist.cz https://www.davidbrach.cz; " +
                     "connect-src 'self' https://www.davidbrach.cz ws://localhost:* http://localhost:* wss://www.davidbrach.cz; " +
                     "frame-ancestors 'self';";
 

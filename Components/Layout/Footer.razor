@@ -1,15 +1,15 @@
-﻿<footer class="footer pt-4 bg-black text-light text-center" aria-label="Patička s informacemi o provozovateli">
+﻿<footer class="footer py-4 bg-black text-light text-center" aria-label="Patička s informacemi o provozovateli">
     <div class="container col-xl-11 col-xxl-10">
         <p class="text-center fw-bold d-flex justify-content-center align-items-center gap-2 m-0">
             &copy; @DateTime.Now.Year
-            <a href="/" class="text-decoration-none text-light d-inline-flex align-items-center" @onclick="Refresh">
+            <a href="/" class="text-decoration-none text-light d-inline-flex align-items-center" @onclick="@(async () => NavigationManager.NavigateTo("/", forceLoad: true))">
                 <img src="images/brand/logoNavMenu.webp" alt="Logo" loading="lazy" class="footer-logo">
             </a>
         </p>
         <p class="text-center fw-bold m-0">
             Všechna práva vyhrazena.
             <br />
-        <a href="/zasady-ochrany-osobnich-udaju" class="text-decoration-none" @onclick="Refresh">
+            <a href="/zasady-ochrany-osobnich-udaju" class="text-decoration-none" @onclick="@(async () => NavigationManager.NavigateTo("/zasady-ochrany-osobnich-udaju", forceLoad: true))">
             Zásady ochrany osobních údajů
         </a>
         </p>
@@ -35,6 +35,10 @@
                 </a>
             </p>
         </div>
+        <hr />
+        <div>
+            <a href="https://www.firmy.cz/detail/13356077-david-brach-tvorba-webovych-stranek-mecin.html#pridat-hodnoceni" target="_blank" rel="noopener"><img src="https://www.firmy.cz/img/widgets/firmy-ohodnotte-nas-tmave.svg" alt="David Břach | Tvorba webových stránek na Firmy.cz" loanding="lazy"/></a>
+        </div>
     </div>
 </footer>
 <style>
@@ -44,10 +48,3 @@
         width: auto; /* Automatické přizpůsobení šířky */
     }
 </style>
-
-@code {
-    private void Refresh()
-    {
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
-    }
-}
